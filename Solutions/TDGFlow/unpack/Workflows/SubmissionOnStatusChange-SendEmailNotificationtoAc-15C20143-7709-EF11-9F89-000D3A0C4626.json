@@ -72,7 +72,7 @@
       "actions": {
         "List_rows_-_Related_TGD_Connection_Contacts": {
           "runAfter": {
-            "Initialize_variable_-_Subject": [
+            "Initialize_variable_-_Email_Body": [
               "Succeeded"
             ]
           },
@@ -335,26 +335,6 @@
           },
           "type": "If"
         },
-        "Initialize_variable_-_Subject": {
-          "runAfter": {
-            "Initialize_variable_-_Email_Body": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "05aff842-c95c-4a0a-8d76-1597f057a88e"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "Subject",
-                "type": "string",
-                "value": "Decision Made Regarding Registration Request – Approved  / Décision prise quant à votre demande d’inscription - approuvée"
-              }
-            ]
-          }
-        },
         "Get_a_row_by_ID_-_Registrations": {
           "runAfter": {
             "Initialize_variable_-_IsProduction": [
@@ -436,7 +416,7 @@
         },
         "Initialize_variable_-_Email_Body": {
           "runAfter": {
-            "Initialize_variable_-_Organization_GUID": [
+            "Initialize_variable_-_Subject": [
               "Succeeded"
             ]
           },
@@ -449,7 +429,27 @@
               {
                 "name": "Email Body",
                 "type": "string",
-                "value": "\n<p>A&amp;@{variables('Organization Name')}, A decision has been made regarding your registration request.</p>\n<p>Your registration has been approved. Please see the attached print this approval letter for your files.</p>\n<p>You may log in to TDG Online portal @{variables('Portal URL')} to see your status.</p>\n<p>&nbsp;</p>\n<p>CANUTEC Registration Team</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>A&amp;@{variables('Organization Name')}, Une décision a été prise concernant votre demande d'inscription.</p>\n<p>Votre inscription a été approuvée. Veuillez imprimer cette lettre d'approbation pour vos dossiers.</p>\n<p>Vous pouvez vous connecter au portail TMD En ligne @{variables('Portal URL')} pour voir votre statut.</p>\n<p>&nbsp;</p>\n<p>L'équipe d'inscription CANUTEC<br>&nbsp;</p>\n "
+                "value": "\n<p>@{variables('Organization Name')}, A decision has been made regarding your registration request.</p>\n<p>Your registration has been approved. Please see the attached print this approval letter for your files.</p>\n<p>You may log in to TDG Online portal @{variables('Portal URL')} to see your status.</p>\n<p>&nbsp;</p>\n<p>CANUTEC Registration Team</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>@{variables('Organization Name')}, Une décision a été prise concernant votre demande d'inscription.</p>\n<p>Votre inscription a été approuvée. Veuillez imprimer cette lettre d'approbation pour vos dossiers.</p>\n<p>Vous pouvez vous connecter au portail TMD En ligne @{variables('Portal URL')} pour voir votre statut.</p>\n<p>&nbsp;</p>\n<p>L'équipe d'inscription CANUTEC<br>&nbsp;</p>\n "
+              }
+            ]
+          }
+        },
+        "Initialize_variable_-_Subject": {
+          "runAfter": {
+            "Initialize_variable_-_Organization_GUID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "05aff842-c95c-4a0a-8d76-1597f057a88e"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Subject",
+                "type": "string",
+                "value": "Decision Made Regarding Registration Request – Approved  / Décision prise quant à votre demande d’inscription - approuvée"
               }
             ]
           }
