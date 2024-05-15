@@ -72,7 +72,7 @@
       "actions": {
         "List_rows_-_Related_TGD_Connection_Contacts": {
           "runAfter": {
-            "Initialize_variable_-_Email_Body": [
+            "Initialize_variable_-_Subject": [
               "Succeeded"
             ]
           },
@@ -88,7 +88,7 @@
             },
             "parameters": {
               "entityName": "connections",
-              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"connection\">\n<attribute name=\"record2id\"/>\n<attribute name=\"record1id\"/>\n<attribute name=\"connectionid\"/>\n<attribute name=\"effectivestart\"/>\n<filter type=\"and\">\n<condition attribute=\"record2objecttypecode\" operator=\"eq\" value=\"2\"/>\n<condition attribute=\"record1objecttypecode\" operator=\"eq\" value=\"1\"/>\n<condition attribute=\"effectivestart\" operator=\"not-null\"/>\n<condition attribute=\"record2roleid\" operator=\"not-null\"/>\n</filter>\n<link-entity name=\"account\" from=\"accountid\" to=\"record1id\" link-type=\"inner\" alias=\"a_b319a54f03644ed1a2f0dc0bae8c384d\">\n<attribute name=\"name\"/>\n<attribute name=\"primarycontactid\"/>\n<filter type=\"and\">\n<condition attribute=\"accountid\" operator=\"eq\"  value=\"@{variables('Organization GUID')}\"/>\n</filter>\n</link-entity>\n<link-entity name=\"contact\" from=\"contactid\" to=\"record2id\" link-type=\"inner\" alias=\"a_72c81aaa72c549acbe9e0deee5bd0ad2\">\n<attribute name=\"jobtitle\"/>\n<attribute name=\"fullname\"/>\n<attribute name=\"emailaddress1\"/>\n<filter type=\"and\">\n<condition attribute=\"ovs_mbun\" operator=\"not-null\"/>\n</filter>\n</link-entity>\n</entity>\n</fetch>"
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"connection\">\n<attribute name=\"record2id\"/>\n<attribute name=\"record1id\"/>\n<attribute name=\"connectionid\"/>\n<attribute name=\"effectivestart\"/>\n<filter type=\"and\">\n<condition attribute=\"record2objecttypecode\" operator=\"eq\" value=\"2\"/>\n<condition attribute=\"record1objecttypecode\" operator=\"eq\" value=\"1\"/>\n<condition attribute=\"effectivestart\" operator=\"not-null\"/>\n<condition attribute=\"record1roleid\" operator=\"not-null\"/>\n</filter>\n<link-entity name=\"account\" from=\"accountid\" to=\"record1id\" link-type=\"inner\" alias=\"a_b319a54f03644ed1a2f0dc0bae8c384d\">\n<attribute name=\"name\"/>\n<attribute name=\"primarycontactid\"/>\n<filter type=\"and\">\n<condition attribute=\"accountid\" operator=\"eq\"  value=\"@{variables('Organization GUID')}\"/>\n</filter>\n</link-entity>\n<link-entity name=\"contact\" from=\"contactid\" to=\"record2id\" link-type=\"inner\" alias=\"a_72c81aaa72c549acbe9e0deee5bd0ad2\">\n<attribute name=\"jobtitle\"/>\n<attribute name=\"fullname\"/>\n<attribute name=\"emailaddress1\"/>\n<filter type=\"and\">\n<condition attribute=\"ovs_mbun\" operator=\"not-null\"/>\n</filter>\n</link-entity>\n</entity>\n</fetch>"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -229,26 +229,6 @@
             ]
           }
         },
-        "Initialize_variable_-_Email_Body": {
-          "runAfter": {
-            "Initialize_variable_-_Subject": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "766979fc-f59e-4e1b-954c-3c703026079f"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "Email Body",
-                "type": "string",
-                "value": "\n<p>A&amp;@{variables('Organization Name')}, A decision has been made regarding your registration request.</p>\n<p>Your registration has been approved. Please see the attached print this approval letter for your files.</p>\n<p>You may log in to TDG Online portal @{variables('Portal URL')} to see your status.</p>\n<p>&nbsp;</p>\n<p>CANUTEC Registration Team</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>A&amp;@{variables('Organization Name')}, Une décision a été prise concernant votre demande d'inscription.</p>\n<p>Votre inscription a été approuvée. Veuillez imprimer cette lettre d'approbation pour vos dossiers.</p>\n<p>Vous pouvez vous connecter au portail TMD En ligne @{variables('Portal URL')} pour voir votre statut.</p>\n<p>&nbsp;</p>\n<p>L'équipe d'inscription CANUTEC<br>&nbsp;</p>\n "
-              }
-            ]
-          }
-        },
         "Initialize_variable_-_Activity_Party": {
           "runAfter": {
             "Initialize_variable_-_CRS_Queue": [
@@ -357,7 +337,7 @@
         },
         "Initialize_variable_-_Subject": {
           "runAfter": {
-            "Initialize_variable_-_Organization_GUID": [
+            "Initialize_variable_-_Email_Body": [
               "Succeeded"
             ]
           },
@@ -450,6 +430,26 @@
                 "name": "Portal URL",
                 "type": "string",
                 "value": " <a href=\"@{parameters('TDGOnlineportal (ovs_TDGOnlineportal)')}\">@{parameters('TDGOnlineportal (ovs_TDGOnlineportal)')}</a>"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_-_Email_Body": {
+          "runAfter": {
+            "Initialize_variable_-_Organization_GUID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "766979fc-f59e-4e1b-954c-3c703026079f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Email Body",
+                "type": "string",
+                "value": "\n<p>A&amp;@{variables('Organization Name')}, A decision has been made regarding your registration request.</p>\n<p>Your registration has been approved. Please see the attached print this approval letter for your files.</p>\n<p>You may log in to TDG Online portal @{variables('Portal URL')} to see your status.</p>\n<p>&nbsp;</p>\n<p>CANUTEC Registration Team</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>A&amp;@{variables('Organization Name')}, Une décision a été prise concernant votre demande d'inscription.</p>\n<p>Votre inscription a été approuvée. Veuillez imprimer cette lettre d'approbation pour vos dossiers.</p>\n<p>Vous pouvez vous connecter au portail TMD En ligne @{variables('Portal URL')} pour voir votre statut.</p>\n<p>&nbsp;</p>\n<p>L'équipe d'inscription CANUTEC<br>&nbsp;</p>\n "
               }
             ]
           }
