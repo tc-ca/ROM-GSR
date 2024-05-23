@@ -59,9 +59,10 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "subscriptionRequest/message": 1,
+              "subscriptionRequest/message": 3,
               "subscriptionRequest/entityname": "ovs_invitation",
               "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filterexpression": "ovs_invite_status_cd eq 2",
               "subscriptionRequest/runas": 3
             },
             "authentication": "@parameters('$authentication')"
@@ -120,7 +121,7 @@
               {
                 "name": "CreatedBy",
                 "type": "string",
-                "value": "@triggerOutputs()?['body/_createdby_value']"
+                "value": "@triggerOutputs()?['body/_modifiedby_value']"
               }
             ]
           }
