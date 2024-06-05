@@ -347,6 +347,46 @@
             <Description description="Date et heure de migration de l'enregistrement." languagecode="1036" />
           </Descriptions>
         </attribute>
+        <attribute PhysicalName="ovs_container_name_nm">
+          <Type>nvarchar</Type>
+          <Name>ovs_container_name_nm</Name>
+          <LogicalName>ovs_container_name_nm</LogicalName>
+          <RequiredLevel>required</RequiredLevel>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+          <ImeMode>auto</ImeMode>
+          <ValidForUpdateApi>1</ValidForUpdateApi>
+          <ValidForReadApi>1</ValidForReadApi>
+          <ValidForCreateApi>1</ValidForCreateApi>
+          <IsCustomField>1</IsCustomField>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>1.0</IntroducedVersion>
+          <IsCustomizable>1</IsCustomizable>
+          <IsRenameable>1</IsRenameable>
+          <CanModifySearchSettings>1</CanModifySearchSettings>
+          <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>0</IsSortableEnabled>
+          <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+          <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat></AutoNumberFormat>
+          <IsSearchable>0</IsSearchable>
+          <IsFilterable>0</IsFilterable>
+          <IsRetrievable>0</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <Format>text</Format>
+          <MaxLength>100</MaxLength>
+          <Length>200</Length>
+          <displaynames>
+            <displayname description="Container Name" languagecode="1033" />
+          </displaynames>
+          <Descriptions>
+            <Description description="Storage account container name where the file is location" languagecode="1033" />
+          </Descriptions>
+        </attribute>
         <attribute PhysicalName="ovs_created_by_contact_id">
           <Type>lookup</Type>
           <Name>ovs_created_by_contact_id</Name>
@@ -499,6 +539,7 @@
           <Length>1000</Length>
           <displaynames>
             <displayname description="File Name" languagecode="1033" />
+            <displayname description="Nom du dossier" languagecode="1036" />
           </displaynames>
           <Descriptions>
             <Description description="file name of the sds file" languagecode="1033" />
@@ -584,6 +625,45 @@
             <Description description="size of the sds file in kilobytes (binary) divide bytes by 1024" languagecode="1033" />
           </Descriptions>
         </attribute>
+        <attribute PhysicalName="ovs_language_cd">
+          <Type>multiselectpicklist</Type>
+          <Name>ovs_language_cd</Name>
+          <LogicalName>ovs_language_cd</LogicalName>
+          <RequiredLevel>none</RequiredLevel>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+          <ImeMode>auto</ImeMode>
+          <ValidForUpdateApi>1</ValidForUpdateApi>
+          <ValidForReadApi>1</ValidForReadApi>
+          <ValidForCreateApi>1</ValidForCreateApi>
+          <IsCustomField>1</IsCustomField>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>1.0.0.0</IntroducedVersion>
+          <IsCustomizable>1</IsCustomizable>
+          <IsRenameable>1</IsRenameable>
+          <CanModifySearchSettings>1</CanModifySearchSettings>
+          <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>0</IsSortableEnabled>
+          <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+          <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat></AutoNumberFormat>
+          <IsSearchable>0</IsSearchable>
+          <IsFilterable>0</IsFilterable>
+          <IsRetrievable>0</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <OptionSetName>ovs_sds_language</OptionSetName>
+          <displaynames>
+            <displayname description="SDS Languages" languagecode="1033" />
+            <displayname description="Langues de la FDS" languagecode="1036" />
+          </displaynames>
+          <Descriptions>
+            <Description description="List of languages within the SDS file" languagecode="1033" />
+          </Descriptions>
+        </attribute>
         <attribute PhysicalName="ovs_manufacturer_keyword_nm">
           <Type>nvarchar</Type>
           <Name>ovs_manufacturer_keyword_nm</Name>
@@ -619,6 +699,7 @@
           <Length>500</Length>
           <displaynames>
             <displayname description="Manufacturer Keyword" languagecode="1033" />
+            <displayname description="Mot clé du fabricant" languagecode="1036" />
           </displaynames>
           <Descriptions>
             <Description description="Keyword used to extract the manufacturer value out of the sds file" languagecode="1033" />
@@ -659,6 +740,7 @@
           <Length>1000</Length>
           <displaynames>
             <displayname description="Manufacturer" languagecode="1033" />
+            <displayname description="Fabricant" languagecode="1036" />
           </displaynames>
           <Descriptions>
             <Description description="manufacturer value extracted from the sds file" languagecode="1033" />
@@ -695,13 +777,78 @@
           <IsRetrievable>1</IsRetrievable>
           <IsLocalizable>0</IsLocalizable>
           <Format>text</Format>
-          <MaxLength>100</MaxLength>
-          <Length>200</Length>
+          <MaxLength>850</MaxLength>
+          <Length>1700</Length>
           <displaynames>
             <displayname description="SDS ID" languagecode="1033" />
+            <displayname description="ID de la FDS" languagecode="1036" />
           </displaynames>
           <Descriptions>
             <Description description="Unique and auto-generated name of the SDS record." languagecode="1033" />
+          </Descriptions>
+        </attribute>
+        <attribute PhysicalName="ovs_nonregistered_manufacturer_ind">
+          <Type>bit</Type>
+          <Name>ovs_nonregistered_manufacturer_ind</Name>
+          <LogicalName>ovs_nonregistered_manufacturer_ind</LogicalName>
+          <RequiredLevel>required</RequiredLevel>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+          <ImeMode>auto</ImeMode>
+          <ValidForUpdateApi>1</ValidForUpdateApi>
+          <ValidForReadApi>1</ValidForReadApi>
+          <ValidForCreateApi>1</ValidForCreateApi>
+          <IsCustomField>1</IsCustomField>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>1.0.0.0</IntroducedVersion>
+          <IsCustomizable>1</IsCustomizable>
+          <IsRenameable>1</IsRenameable>
+          <CanModifySearchSettings>1</CanModifySearchSettings>
+          <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>0</IsSortableEnabled>
+          <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+          <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat></AutoNumberFormat>
+          <IsSearchable>0</IsSearchable>
+          <IsFilterable>0</IsFilterable>
+          <IsRetrievable>0</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <AppDefaultValue>0</AppDefaultValue>
+          <optionset Name="ovs_sds_ovs_nonregistered_manufacturer_ind">
+            <OptionSetType>bit</OptionSetType>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <IsCustomizable>1</IsCustomizable>
+            <ExternalTypeName></ExternalTypeName>
+            <displaynames>
+              <displayname description="Non Registered Manufacturer" languagecode="1033" />
+              <displayname description="Fabricant non enregistré" languagecode="1036" />
+            </displaynames>
+            <Descriptions>
+              <Description description="" languagecode="1033" />
+            </Descriptions>
+            <options>
+              <option value="1" ExternalValue="">
+                <labels>
+                  <label description="Yes" languagecode="1033" />
+                </labels>
+              </option>
+              <option value="0" ExternalValue="">
+                <labels>
+                  <label description="No" languagecode="1033" />
+                </labels>
+              </option>
+            </options>
+          </optionset>
+          <displaynames>
+            <displayname description="Non Registered Manufacturer" languagecode="1033" />
+            <displayname description="Fabricant non enregistré" languagecode="1036" />
+          </displaynames>
+          <Descriptions>
+            <Description description="Indicates whether the file is associated with a manufacturer not registered within the system." languagecode="1033" />
           </Descriptions>
         </attribute>
         <attribute PhysicalName="ovs_organization_id">
@@ -737,6 +884,7 @@
           <LookupTypes />
           <displaynames>
             <displayname description="Organization" languagecode="1033" />
+            <displayname description="Organisation" languagecode="1036" />
           </displaynames>
           <Descriptions>
             <Description description="The organization that is the owner of the safety data sheet" languagecode="1033" />
@@ -777,6 +925,7 @@
           <Length>500</Length>
           <displaynames>
             <displayname description="Product Codes Keyword" languagecode="1033" />
+            <displayname description="Mot clé des codes produits" languagecode="1036" />
           </displaynames>
           <Descriptions>
             <Description description="Keyword used to index the product codes value from the sds file." languagecode="1033" />
@@ -817,6 +966,7 @@
           <Length>500</Length>
           <displaynames>
             <displayname description="Product Codes" languagecode="1033" />
+            <displayname description="Codes produits" languagecode="1036" />
           </displaynames>
           <Descriptions>
             <Description description="Product codes of the safety data sheet" languagecode="1033" />
@@ -857,6 +1007,7 @@
           <Length>500</Length>
           <displaynames>
             <displayname description="Product Identifier Keyword" languagecode="1033" />
+            <displayname description="Mot clé de l'identifiant du produit" languagecode="1036" />
           </displaynames>
           <Descriptions>
             <Description description="The keyword variation that was used to extract the product identifier" languagecode="1033" />
@@ -897,6 +1048,7 @@
           <Length>1000</Length>
           <displaynames>
             <displayname description="Product Identifier" languagecode="1033" />
+            <displayname description="Identifiant du produit" languagecode="1036" />
           </displaynames>
           <Descriptions>
             <Description description="Primary name of the material referenced in the safety data sheet." languagecode="1033" />
@@ -937,6 +1089,7 @@
           <Length>500</Length>
           <displaynames>
             <displayname description="Revision Date Keyword" languagecode="1033" />
+            <displayname description="Mot clé de la date de révision" languagecode="1036" />
           </displaynames>
           <Descriptions>
             <Description description="keyword used to extract the revision date value from the sds file" languagecode="1033" />
@@ -977,6 +1130,7 @@
           <Length>200</Length>
           <displaynames>
             <displayname description="Revision Date" languagecode="1033" />
+            <displayname description="Date de révision" languagecode="1036" />
           </displaynames>
           <Descriptions>
             <Description description="revision date of the sds file extracted as text. No attempt to convert to date" languagecode="1033" />

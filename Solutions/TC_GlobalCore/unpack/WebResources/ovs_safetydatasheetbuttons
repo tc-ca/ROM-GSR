@@ -49,21 +49,27 @@ var SafetySheetsRibbon = (function (window, document) {
 			recordId = recordId.replace(/[{}]/g, '');
 
 
-		Xrm.WebApi.retrieveRecord("ovs_sds", recordId, "?$select=ovs_file_name_nm,ovs_file_path_txt").then(
+		Xrm.WebApi.retrieveRecord("ovs_sds", recordId, "?$select=ovs_container_name_nm,ovs_file_path_txt,ovs_file_name_nm").then(
 			function success(result) {
 				console.log(result);
 				// Columns
 				var ovs_sdsid = result["ovs_sdsid"]; // Guid
-				//var ovs_file_name_nm = result["ovs_file_name_nm"]; // Text
+				var ovs_container_name_nm = result["ovs_container_name_nm"]; // Text
 				var ovs_file_path_txt = result["ovs_file_path_txt"]; // Text
+				var ovs_file_name_nm = result["ovs_file_name_nm"] == null ? ovs_file_path_txt : result["ovs_file_name_nm"];
 
 				if (ovs_file_path_txt == null) {
 					Xrm.Navigation.openErrorDialog({ message: "File path is empty. Please contact support" });
 					return;
 				}
 
+				if (ovs_container_name_nm == null) {
+					Xrm.Navigation.openErrorDialog({ message: "Container name is empty. Please contact support" });
+					return;
+				}
+
 				//comment/uncomment for blob reader
-				openBlobReader(ovs_file_path_txt, "document");
+				openBlobReader(ovs_file_path_txt, ovs_container_name_nm, ovs_file_name_nm);
 
 			//	//comment/uncomment for flow execution 
 			//	Xrm.WebApi.retrieveMultipleRecords("qm_environmentsettings", "?$select=qm_value&$filter=qm_name eq 'CRS_SDS_Flow_BlobStorageLocationSASTokenGenerator'").then(
@@ -99,12 +105,15 @@ var SafetySheetsRibbon = (function (window, document) {
 		);
 	}
 
-	function openBlobReader(filePath, containerName) {
+	function openBlobReader(filePath, containerName, fileName) {
 
 		//open blob file in web resource
 		var formParameters = {};
 		formParameters["filePath"] = filePath;
 		formParameters["containerName"] = containerName;
+		formParameters["sas_variable_name"] = "ovs_SDS_BlobSAS";
+		formParameters["storageAccount_var_name"] = "ovs_SDS_BlobAccountName";
+
 
 
 		var pageInput = {
@@ -118,7 +127,7 @@ var SafetySheetsRibbon = (function (window, document) {
 			height: { value: 90, unit: "%" },
 			width: { value: 80, unit: "%" },
 			position: 1,
-			title: containerName,
+			title: fileName,
 		};
 
 
@@ -126,11 +135,14 @@ var SafetySheetsRibbon = (function (window, document) {
 			pageInput,
 			navigationOptions).then(
 				function (result) {
+
+					URL.revokeObjectURL()
 					return;
 				},
 				function error() {
 
 					Xrm.Navigation.openErrorDialog({ message: error.message });
+					URL.revokeObjectURL()
 					return;
 				}
 		);

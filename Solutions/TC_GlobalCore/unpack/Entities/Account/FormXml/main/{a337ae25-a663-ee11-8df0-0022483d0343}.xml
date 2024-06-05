@@ -27,7 +27,7 @@
                   </labels>
                   <rows>
                     <row>
-                      <cell id="{4b852397-0599-4d64-af59-913a62182caf}" locklevel="0" colspan="1" rowspan="1">
+                      <cell id="{4b852397-0599-4d64-af59-913a62182caf}" locklevel="0" colspan="1" rowspan="1" visible="false">
                         <labels>
                           <label description="Account Name (English)" languagecode="1033" />
                           <label description="Nom du compte (anglais)" languagecode="1036" />
@@ -36,7 +36,7 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{387b43e4-889b-4fc1-b34b-e88ca2d31abe}" locklevel="0" colspan="1" rowspan="1">
+                      <cell id="{387b43e4-889b-4fc1-b34b-e88ca2d31abe}" locklevel="0" colspan="1" rowspan="1" visible="false">
                         <labels>
                           <label description="Account Name (French)" languagecode="1033" />
                           <label description="Nom du compte (français)" languagecode="1036" />
@@ -54,7 +54,7 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{8b98a55e-a345-b20e-d46e-801e79d5c1c1}" showlabel="true" labelid="{e08acfa9-0891-477d-8ffc-dab89a858613}">
+                      <cell id="{8b98a55e-a345-b20e-d46e-801e79d5c1c1}" showlabel="true" labelid="{e08acfa9-0891-477d-8ffc-dab89a858613}" visible="false">
                         <labels>
                           <label description="Fax" languagecode="1033" />
                           <label description="Télécopieur" languagecode="1036" />
@@ -63,7 +63,7 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{e6441984-4343-813a-aa7e-e2747ad35390}" showlabel="true" labelid="{75e497d7-e3c3-4ddf-a2e5-4bc64e947c15}">
+                      <cell id="{e6441984-4343-813a-aa7e-e2747ad35390}" showlabel="true" labelid="{75e497d7-e3c3-4ddf-a2e5-4bc64e947c15}" visible="false">
                         <labels>
                           <label description="Website" languagecode="1033" />
                           <label description="Page Web" languagecode="1036" />
@@ -72,7 +72,7 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{a677c4a8-6bf3-49d7-9e5d-1ee84d41fb44}" locklevel="0" colspan="1" rowspan="1" labelid="{ce4b4a4d-df4a-4571-9203-f9ab7bac3ca9}">
+                      <cell id="{a677c4a8-6bf3-49d7-9e5d-1ee84d41fb44}" locklevel="0" colspan="1" rowspan="1" labelid="{ce4b4a4d-df4a-4571-9203-f9ab7bac3ca9}" visible="false">
                         <labels>
                           <label description="Email" languagecode="1033" />
                           <label description="Courriel" languagecode="1036" />
@@ -120,6 +120,7 @@
                 <section id="{cc0fe06e-4b5f-4648-A62d-84d1514e1fc5}" name="ADDRESS" IsUserDefined="0" showlabel="true" locklevel="0" labelid="{75d44575-6a0b-4846-9044-b3d94860c781}" showbar="false" layout="varwidth" columns="1" labelwidth="115" celllabelposition="Left">
                   <labels>
                     <label description="ADDRESS" languagecode="1033" />
+                    <label description="ADRESSE" languagecode="1036" />
                   </labels>
                   <rows>
                     <row>
@@ -147,6 +148,15 @@
                           <label description="Rue 2" languagecode="1036" />
                         </labels>
                         <control id="address1_line2" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="address1_line2" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{7f8f26dc-fbc0-4953-b632-ec044ad2e2dd}" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="Street 3" languagecode="1033" />
+                          <label description="Rue 3" languagecode="1036" />
+                        </labels>
+                        <control id="address1_line3" classid="{4273EDBD-AC1D-40D3-9FB2-095C621B552D}" datafieldname="address1_line3" disabled="false" />
                       </cell>
                     </row>
                     <row>
@@ -256,6 +266,7 @@
                 <section id="{7a073b7c-5422-2418-3d26-b2a7eb290832}" name="SOCIAL_PANE_TAB" IsUserDefined="0" showlabel="false" locklevel="0" labelid="{4cea1316-1863-411d-8236-bd5d7454d9dd}" showbar="false" layout="varwidth" columns="1" labelwidth="115" celllabelposition="Top" celllabelalignment="Left">
                   <labels>
                     <label description="SOCIAL PANE" languagecode="1033" />
+                    <label description="VOLET SOCIAL" languagecode="1036" />
                   </labels>
                   <rows>
                     <row>
@@ -2066,6 +2077,7 @@
         <Library name="qm_globalHelper.js" libraryUniqueId="{9e7b1129-dd81-845b-a02d-b54a345a4bd5}" />
         <Library name="msdyn_/Utils/FieldServiceTrial.js" libraryUniqueId="{81848ec9-2a66-58a9-8e79-84d836110771}" />
         <Library name="msdyn_/Account/Account.Library.js" libraryUniqueId="{d8db2d05-4b38-9935-cedb-cdacb9e65d75}" />
+        <Library name="ovs_CRS_account_site.js" libraryUniqueId="{d7cb1dd3-9c2a-477b-9c0b-71d09081d8cd}" />
       </formLibraries>
       <events>
         <event name="onload" application="false" active="false">
@@ -2076,13 +2088,12 @@
             <Handler functionName="FS.Account.Library.Load" libraryName="msdyn_/Account/Account.Library.js" handlerUniqueId="{c7515835-a98a-1b24-139a-a0d7055ec3bc}" enabled="true" passExecutionContext="true" parameters="" />
             <Handler functionName="FieldServiceTrial.Library.Load" libraryName="msdyn_/Utils/FieldServiceTrial.js" handlerUniqueId="{58a9e819-d88b-c572-d1d3-601017c57b37}" enabled="true" passExecutionContext="true" parameters="" />
             <Handler functionName="Sales.DocumentsTabController.shouldShowDocumentsTab" libraryName="Sales/ClientCommon/Sales_ClientCommon.js" handlerUniqueId="{CA3D9A4B-7A5C-4238-BAD6-5810FB05E86C}" enabled="true" passExecutionContext="true" parameters="" />
+            <Handler functionName="AccountCRS_site.OnLoad" libraryName="ovs_CRS_account_site.js" handlerUniqueId="{2aae79b8-7f29-4da3-9e6a-970f0c36a942}" enabled="true" parameters="" passExecutionContext="true" />
           </Handlers>
         </event>
       </events>
       <DisplayConditions FallbackForm="true" Order="36">
-        <Role Id="{B7DFB73F-188A-EE11-8179-000D3AF35F84}" />
-        <Role Id="{3DAC4D9E-568C-E611-80D4-00155D42A122}" />
-        <Role Id="{ecfd0b44-5720-45e3-ae68-417ddb0fb654}" />
+        <Role Id="{682094A5-178A-EE11-8179-000D3AF35F84}" />
         <Role Id="{627090ff-40a3-4053-8790-584edc5be201}" />
         <Role Id="{119f245c-3cc8-4b62-b31c-d1a046ced15d}" />
       </DisplayConditions>
@@ -2091,7 +2102,7 @@
     <CanBeDeleted>1</CanBeDeleted>
     <LocalizedNames>
       <LocalizedName description="CRS Site Profile" languagecode="1033" />
-      <LocalizedName description="Profil du site BDIC" languagecode="1036" />
+      <LocalizedName description="Profil du site SIC" languagecode="1036" />
     </LocalizedNames>
     <Descriptions>
       <Description description="TDG Core 2 site profile form" languagecode="1033" />

@@ -385,6 +385,46 @@
             <Description description="" languagecode="1033" />
           </Descriptions>
         </attribute>
+        <attribute PhysicalName="ovs_BlobPath">
+          <Type>nvarchar</Type>
+          <Name>ovs_blobpath</Name>
+          <LogicalName>ovs_blobpath</LogicalName>
+          <RequiredLevel>none</RequiredLevel>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+          <ImeMode>auto</ImeMode>
+          <ValidForUpdateApi>1</ValidForUpdateApi>
+          <ValidForReadApi>1</ValidForReadApi>
+          <ValidForCreateApi>1</ValidForCreateApi>
+          <IsCustomField>1</IsCustomField>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>1.0</IntroducedVersion>
+          <IsCustomizable>1</IsCustomizable>
+          <IsRenameable>1</IsRenameable>
+          <CanModifySearchSettings>1</CanModifySearchSettings>
+          <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>0</IsSortableEnabled>
+          <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+          <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat></AutoNumberFormat>
+          <IsSearchable>0</IsSearchable>
+          <IsFilterable>0</IsFilterable>
+          <IsRetrievable>0</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <Format>text</Format>
+          <MaxLength>500</MaxLength>
+          <Length>1000</Length>
+          <displaynames>
+            <displayname description="Blob Path" languagecode="1033" />
+          </displaynames>
+          <Descriptions>
+            <Description description="" languagecode="1033" />
+          </Descriptions>
+        </attribute>
         <attribute PhysicalName="ovs_crs_legacy_company_id">
           <Type>int</Type>
           <Name>ovs_crs_legacy_company_id</Name>
@@ -499,7 +539,7 @@
           <CanChangeDateTimeBehavior>1</CanChangeDateTimeBehavior>
           <Behavior>1</Behavior>
           <displaynames>
-            <displayname description="Date Decision" languagecode="1033" />
+            <displayname description="Decision Date" languagecode="1033" />
             <displayname description="Date de décision" languagecode="1036" />
           </displaynames>
           <Descriptions>
@@ -1003,7 +1043,7 @@
                   <label description="Actif" languagecode="1036" />
                 </labels>
               </state>
-              <state value="1" defaultstatus="2" invariantname="Inactive">
+              <state value="1" defaultstatus="918640005" invariantname="Inactive">
                 <labels>
                   <label description="Inactive" languagecode="1033" />
                   <label description="Inactif" languagecode="1036" />
@@ -1063,7 +1103,22 @@
               <Description description="Raison du statut de l'élément Submission" languagecode="1036" />
             </Descriptions>
             <statuses>
-              <status value="1" state="0">
+              <status value="2" state="1" TransitionData="" Color="#0000ff">
+                <labels>
+                  <label description="Inactive" languagecode="1033" />
+                  <label description="Inactif" languagecode="1036" />
+                </labels>
+              </status>
+              <status value="918640005" state="1">
+                <labels>
+                  <label description="Approved" languagecode="1033" />
+                  <label description="Approuvé" languagecode="1036" />
+                </labels>
+                <Descriptions>
+                  <Description description="" languagecode="1033" />
+                </Descriptions>
+              </status>
+              <status value="1" state="0" TransitionData="" Color="#0000ff">
                 <labels>
                   <label description="Submitted" languagecode="1033" />
                   <label description="Actif" languagecode="1036" />
@@ -1072,39 +1127,55 @@
                   <Description description="" languagecode="1033" />
                 </Descriptions>
               </status>
-              <status value="2" state="1">
-                <labels>
-                  <label description="Inactive" languagecode="1033" />
-                  <label description="Inactif" languagecode="1036" />
-                </labels>
-              </status>
-              <status value="918640001" state="0">
+              <status value="918640001" state="0" TransitionData="" Color="#0000ff">
                 <labels>
                   <label description="Additional Info Required" languagecode="1033" />
+                  <label description="Informations supplémentaires requises" languagecode="1036" />
                 </labels>
                 <Descriptions>
                   <Description description="" languagecode="1033" />
                 </Descriptions>
               </status>
-              <status value="918640002" state="0">
+              <status value="918640002" state="0" Color="#0000ff">
                 <labels>
                   <label description="Approved" languagecode="1033" />
+                  <label description="Approuvée" languagecode="1036" />
                 </labels>
                 <Descriptions>
                   <Description description="" languagecode="1033" />
                 </Descriptions>
               </status>
-              <status value="918640003" state="0">
+              <status value="918640003" state="0" Color="#0000ff">
                 <labels>
                   <label description="Declined" languagecode="1033" />
+                  <label description="Refusée" languagecode="1036" />
                 </labels>
                 <Descriptions>
                   <Description description="" languagecode="1033" />
                 </Descriptions>
               </status>
-              <status value="918640004" state="0">
+              <status value="918640004" state="0" Color="#0000ff">
                 <labels>
                   <label description="Cancelled" languagecode="1033" />
+                  <label description="Annulée" languagecode="1036" />
+                </labels>
+                <Descriptions>
+                  <Description description="" languagecode="1033" />
+                </Descriptions>
+              </status>
+              <status value="918640006" state="1">
+                <labels>
+                  <label description="Declined" languagecode="1033" />
+                  <label description="Refusée" languagecode="1036" />
+                </labels>
+                <Descriptions>
+                  <Description description="" languagecode="1033" />
+                </Descriptions>
+              </status>
+              <status value="918640007" state="1">
+                <labels>
+                  <label description="Cancelled" languagecode="1033" />
+                  <label description="Annulée" languagecode="1036" />
                 </labels>
                 <Descriptions>
                   <Description description="" languagecode="1033" />
@@ -1264,7 +1335,7 @@
       <CanChangeHierarchicalRelationship>1</CanChangeHierarchicalRelationship>
       <EntityHelpUrlEnabled>0</EntityHelpUrlEnabled>
       <EntityHelpUrl></EntityHelpUrl>
-      <ChangeTrackingEnabled>0</ChangeTrackingEnabled>
+      <ChangeTrackingEnabled>1</ChangeTrackingEnabled>
       <CanChangeTrackingBeEnabled>1</CanChangeTrackingBeEnabled>
       <IsEnabledForExternalChannels>0</IsEnabledForExternalChannels>
       <IsMSTeamsIntegrationEnabled>0</IsMSTeamsIntegrationEnabled>

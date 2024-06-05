@@ -11,10 +11,13 @@ var AccountCRS_org = (function (window, document) {
     };
 
     var formMapping_FR = {
-        "948010001": "Site",
-        "948010000": "Entreprise",
+        "948010001": "Profil du site SIC",
+        "948010000": "Organisation SIC",
     };
     var formContextGlobalRef;
+
+    var PostalAdressArray = new Array("address1_line1", "address1_line2", "address1_line3", "address1_city", "address1_stateorprovince", "address1_postalcode", "address1_country");
+    var LongLatArray = new Array("address1_longitude", "address1_latitude");
 
 
     //********************private methods*******************
@@ -203,6 +206,23 @@ var AccountCRS_org = (function (window, document) {
         });
     }
 
+    function filter_addressType(formContext) {
+
+        var options = new Array("0", "2");
+        glHelper.filterOptionSet(formContext, "ovs_address_type", options, true);
+
+    }
+
+    function clearHideEase(formContext, arrayOfFields, doClearHideEase) {
+
+        for (var i = 0; i < arrayOfFields.length; i++) {
+            if (doClearHideEase) glHelper.SetValue(formContext, arrayOfFields[i], null);
+            glHelper.SetControlVisibility(formContext, arrayOfFields[i], !doClearHideEase);
+            glHelper.SetRequiredLevel(formContext, arrayOfFields[i], !doClearHideEase);
+        }
+    }
+
+  
 
     //********************private methods end***************
 
@@ -210,15 +230,22 @@ var AccountCRS_org = (function (window, document) {
     return {
 
         OnLoad: function (executionContext) {
-
+            
             const formContext = executionContext.getFormContext();
             formContextGlobalRef = formContext;
             debugger;
+
+           
+
             //filter Relationship Type
             filter_customertypecode(formContext);
+            //filter Address Type
+            filter_addressType(formContext);
 
             // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
             formType = glHelper.GetFormType(formContext);
+
+
 
             // Retrieve customertypecode 
             var _customerType;
@@ -226,6 +253,17 @@ var AccountCRS_org = (function (window, document) {
             if (rTypeCode) _customerType = formContext.getAttribute("customertypecode").getValue();
             rTypeCode.removeOnChange(AccountCRS_org.relationShip_OnChange); // avoid binding multiple event handlers
             rTypeCode.addOnChange(AccountCRS_org.relationShip_OnChange);
+            rTypeCode.fireOnChange();
+           
+
+
+            //Address type
+            var adrType = formContext.getAttribute("ovs_address_type");
+            adrType.removeOnChange(AccountCRS_org.AddressType_OnChange);
+            adrType.addOnChange(AccountCRS_org.AddressType_OnChange);
+
+
+
             //populate bn
             var CRA_BN = formContext.getAttribute("cid_crabusinessnumber");
             CRA_BN.removeOnChange(AccountCRS_org.CRABusinessNumber_OnChange); 
@@ -239,32 +277,67 @@ var AccountCRS_org = (function (window, document) {
             reasonText.removeOnChange(AccountCRS_org.CRABusinessNumber_OnChange);
             reasonText.addOnChange(AccountCRS_org.CRABusinessNumber_OnChange);
 
+            //fire address type on change
+            adrType.fireOnChange();
 
 
             //create
             if (formType == 1) {
-                
+                   
                 CRA_BN.fireOnChange();
+                //rTypeCode.fireOnChange();
             }
             //update etc
             if (formType > 1) {
-                rTypeCode.fireOnChange();
+                //rTypeCode.fireOnChange();
             }
         },
+
+
+        //relationShip_OnChange: function (executionContext) {
+
+        //    var formContext = executionContext.getFormContext();
+
+        //    //Load up resources for English/French labels
+        //    var langId = Xrm.Utility.getGlobalContext().userSettings.languageId;
+        //    var rType = glHelper.GetValue(formContext, "customertypecode");
+
+        //    if (langId == 1033)
+        //        glHelper.SwitchFormByName(formContext, formMapping_EN[rType.toString()]);
+        //    else if (langId == 1036)
+        //        glHelper.SwitchFormByName(formContext, formMapping_FR[rType.toString()]);
+
+        //},
 
 
         relationShip_OnChange: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
-
-            //Load up resources for English/French labels
+            var parentaccountid = glHelper.GetLookupAttrId(formContext, "parentaccountid");
             var langId = Xrm.Utility.getGlobalContext().userSettings.languageId;
-            var rType = glHelper.GetValue(formContext, "customertypecode");
 
-            if (langId == 1033)
-                glHelper.SwitchFormByName(formContext, formMapping_EN[rType.toString()]);
-            else if (langId == 1036)
-                glHelper.SwitchFormByName(formContext, formMapping_FR[rType.toString()]);
+            if (formType > 1) {
+
+                var rType = glHelper.GetValue(formContext, "customertypecode");
+
+                if (langId == 1033)
+                    glHelper.SwitchFormByName(formContext, formMapping_EN[rType.toString()]);
+                else if (langId == 1036)
+                    glHelper.SwitchFormByName(formContext, formMapping_FR[rType.toString()]);
+            } else {
+
+                if (formType == 1 && parentaccountid != null) {
+
+                    glHelper.SetValue(formContext, "customertypecode", 948010001);
+
+                    if (langId == 1033)
+                        glHelper.SwitchFormByName(formContext, formMapping_EN["948010001"]);
+                    else if (langId == 1036)
+                        glHelper.SwitchFormByName(formContext, formMapping_FR["948010001"]);
+
+                }
+
+            }
 
         },
 
@@ -317,6 +390,39 @@ var AccountCRS_org = (function (window, document) {
                 setRemoveNotification(formContext, false, message);
             }
         },
+
+        AddressType_OnChange: function (executionContext) {
+            var formContext = executionContext.getFormContext();
+            //var addrTypeValue = glHelper.GetOptionsetValue(formContext, "ovs_address_type");
+
+            switch (formContext.getAttribute("ovs_address_type").getValue()) {
+
+                //Postal Address
+                case 0: {
+                    //clean and hide long and lat, enabel Postal
+                    clearHideEase(formContext, LongLatArray, true);
+                    clearHideEase(formContext, PostalAdressArray, false);
+                    //street2 and 3 are never required
+                    glHelper.SetRequiredLevel(formContext, "address1_line2", false);
+                    glHelper.SetRequiredLevel(formContext, "address1_line3", false);
+
+                } break;
+                //LongLat
+                case 2: {
+                    //clean and hide Postal Adress fields, enable LongLat
+                    clearHideEase(formContext, LongLatArray, false);
+                    clearHideEase(formContext, PostalAdressArray, true);
+
+                } break;
+                default: {
+                    //clean and hide all
+                    clearHideEase(formContext, LongLatArray, true);
+                    clearHideEase(formContext, PostalAdressArray, true);
+                } break;
+
+            }
+
+        }
     }
     //********************public methods end***************
 

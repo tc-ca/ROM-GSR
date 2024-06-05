@@ -12,10 +12,9 @@
         <row name="result" id="connectionid">
           <cell name="record2id" width="200" />
           <cell name="record1id" width="200" />
-          <cell name="a_72c81aaa72c549acbe9e0deee5bd0ad2.fullname" width="200" />
-          <cell name="record2roleid" width="170" />
-          <cell name="a_72c81aaa72c549acbe9e0deee5bd0ad2.emailaddress1" width="200" />
-          <cell name="a_72c81aaa72c549acbe9e0deee5bd0ad2.statecode" width="165" />
+          <cell name="a_b319a54f03644ed1a2f0dc0bae8c384d.name" width="300" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_b319a54f03644ed1a2f0dc0bae8c384d.primarycontactid" width="200" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_72c81aaa72c549acbe9e0deee5bd0ad2.jobtitle" width="150" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
         </row>
       </grid>
     </layoutxml>
@@ -23,8 +22,6 @@
     <fetchxml>
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
         <entity name="connection">
-          <attribute name="connectionid" />
-          <attribute name="record2roleid" />
           <filter type="and">
             <condition attribute="record2objecttypecode" operator="eq" value="2" />
             <condition attribute="record2roleid" operator="in">
@@ -33,13 +30,16 @@
             </condition>
             <condition attribute="record1objecttypecode" operator="eq" value="1" />
           </filter>
-          <link-entity alias="a_72c81aaa72c549acbe9e0deee5bd0ad2" name="contact" to="record2id" from="contactid" link-type="outer" visible="false">
-            <attribute name="fullname" />
-            <attribute name="emailaddress1" />
-            <attribute name="statecode" />
-          </link-entity>
           <attribute name="record2id" />
           <attribute name="record1id" />
+          <link-entity alias="a_72c81aaa72c549acbe9e0deee5bd0ad2" name="contact" to="record2id" from="contactid" link-type="outer" visible="false">
+            <attribute name="jobtitle" />
+          </link-entity>
+          <link-entity alias="a_b319a54f03644ed1a2f0dc0bae8c384d" name="account" from="accountid" to="record1id" link-type="outer" visible="false">
+            <attribute name="name" />
+            <attribute name="primarycontactid" />
+          </link-entity>
+          <attribute name="connectionid" />
         </entity>
       </fetch>
     </fetchxml>
