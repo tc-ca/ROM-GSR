@@ -109,7 +109,7 @@
       "actions": {
         "List_rows_Registration": {
           "runAfter": {
-            "Append_to_array_variable_Send_Email_Queue": [
+            "Initialize_variable_Contact_Role": [
               "Succeeded"
             ]
           },
@@ -801,8 +801,8 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
-                  "entityName": "connections",
-                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n                                      <entity name=\"connection\">\n                                        <attribute name=\"record2id\" />\n                                        <attribute name=\"record2roleid\" />\n                                        <attribute name=\"connectionid\" />\n                                        <order attribute=\"record2id\" descending=\"false\" />\n                                        <filter type=\"and\">\n                                          <condition attribute=\"record1id\" operator=\"eq\" uiname=\"A&amp;A PROPANE\" uitype=\"account\" value=\"@{items('Apply_to_each')?['_ovs_organization_id_value']}\" />\n                                          <condition attribute=\"effectivestart\" operator=\"not-null\" />\n                                          <condition attribute=\"effectivestart\" operator=\"on-or-before\" value=\"@{variables('System Date')}\" />\n                                        </filter>\n                                        <link-entity name=\"contact\" from=\"contactid\" to=\"record2id\" visible=\"false\" link-type=\"outer\" alias=\"Contact\">\n                                          <attribute name=\"lastname\" />\n                                          <attribute name=\"contactid\" />\n                                          <attribute name=\"fullname\" />\n                                          <attribute name=\"firstname\" />\n                                          <attribute name=\"emailaddress1\" />\n                                          <attribute name=\"cid_contacttype\" />\n                                        </link-entity>\n                                      </entity>\n                                    </fetch>"
+                  "entityName": "ovs_organization_contacts",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"ovs_organization_contact\">\n    <attribute name=\"ovs_organization_contactid\" />\n    <attribute name=\"ovs_role_id\" />\n    <attribute name=\"ovs_invitation_accepted_ind\" />\n    <attribute name=\"ovs_contact_id\" />\n    <attribute name=\"createdon\" />\n    <order attribute=\"createdon\" descending=\"false\" />\n    <order attribute=\"ovs_role_id\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"ovs_organization_id\" operator=\"eq\" uitype=\"account\" value=\"@{items('Apply_to_each')?['_ovs_organization_id_value']}\" />\n      <condition attribute=\"ovs_invitation_accepted_ind\" operator=\"eq\" value=\"1\" />\n    </filter>\n    <link-entity name=\"ovs_organization_contact_role\" from=\"ovs_organization_contact_roleid\" to=\"ovs_role_id\" visible=\"false\" link-type=\"outer\" alias=\"Role\">\n      <attribute name=\"ovs_name\" />\n    </link-entity>\n    <link-entity name=\"contact\" from=\"contactid\" to=\"ovs_contact_id\" link-type=\"inner\" alias=\"Contact\">\n      <attribute name=\"lastname\" />\n      <attribute name=\"firstname\" />\n      <attribute name=\"fullname\" />\n      <attribute name=\"emailaddress1\" />\n      <attribute name=\"contactid\" />\n      <filter type=\"and\">\n        <condition attribute=\"ovs_mbun\" operator=\"not-null\" />\n        <condition attribute=\"ovs_external_user_ind\" operator=\"eq\" value=\"1\" />\n      </filter>\n    </link-entity>\n  </entity>\n</fetch>"
                 },
                 "authentication": "@parameters('$authentication')"
               }
@@ -857,7 +857,11 @@
                       }
                     }
                   },
-                  "runAfter": {},
+                  "runAfter": {
+                    "Set_variable_2": [
+                      "Succeeded"
+                    ]
+                  },
                   "else": {
                     "actions": {
                       "Set_variable_Primary_Contact_2": {
@@ -907,15 +911,49 @@
                     }
                   },
                   "expression": {
-                    "equals": [
-                      "@items('Apply_to_each_Connection')?['Contact.cid_contacttype']",
-                      100000000
+                    "contains": [
+                      "@variables('ContactRole')",
+                      "Primary"
                     ]
                   },
                   "metadata": {
                     "operationMetadataId": "6a6ca3ab-91fc-4304-9890-a228a2ceee12"
                   },
                   "type": "If"
+                },
+                "Get_a_row_by_ID": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "e97b5cd5-1dfc-4450-a453-85006fffa902"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "GetItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "ovs_organization_contacts",
+                      "recordId": "@items('Apply_to_each_Connection')?['ovs_organization_contactid']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Set_variable_2": {
+                  "runAfter": {
+                    "Get_a_row_by_ID": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "99e96c86-7024-4d1a-9277-8b3cd97d7a45"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ContactRole",
+                    "value": "@outputs('Get_a_row_by_ID')?['body/_ovs_role_id_value']"
+                  }
                 }
               },
               "runAfter": {
@@ -1233,6 +1271,25 @@
               "participationtypemask": 1,
               "partyid@odata.bind": "@{variables('Sender Email')}"
             }
+          }
+        },
+        "Initialize_variable_Contact_Role": {
+          "runAfter": {
+            "Append_to_array_variable_Send_Email_Queue": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "029bc5c9-7b9f-4392-8adf-370368f7be19"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ContactRole",
+                "type": "string"
+              }
+            ]
           }
         }
       }
