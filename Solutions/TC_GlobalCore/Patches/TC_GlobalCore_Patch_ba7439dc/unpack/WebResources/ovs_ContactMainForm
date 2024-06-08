@@ -1,0 +1,112 @@
+﻿var globalFormContext;
+
+const TabNames = {
+    TAB_SUMMARY: "SUMMARY_TAB",
+    TAB_DETAIL: "DETAILS_TAB",
+    TAB_SCHEDULING: "urstab",
+    TAB_FILES: "documents_sharepoint"
+}
+
+//const TAB_GENERAL_NAME = "SUMMARY_TAB";
+//const TAB_DETAIL_NAME = "DETAILS_TAB";
+//const TAB_SCHEDULING = "urstab";
+//const TAB_FILES = "documents_sharepoint";
+
+const SummarySections = {
+    ContactInformation: "CONTACT_INFORMATION",
+    Timeline: "SOCIAL_PANE_TAB",
+    Assistant: "Summary_section_6",
+    Company: "CUSTOMER_DETAILS_TAB",
+    Account: "ACCOUNTS_TAB",
+    Map: "MapSection",
+    BusinessCard: "BusinessCard"
+};
+
+const DetailSections = {
+    PersonalInformation: "PERSONAL INFORMATION",
+    PersonalNotes: "PERSONAL_NOTES_SECTION",
+    Billing: "billing information",
+    Marketing: "marketing information",
+    Shipping: "shipping information",
+    ContactPreferences: "CONTACT_PREFERENCES"
+}
+
+const FIELD_ACCOUNT_NAME = "parentcustomerid";
+const FIELD_TITLE = "jobtitle";
+const FIELD_EMAIL = "emailaddress1";
+const FIELD_BUSINESS_PHONE_NUMBER = "telephone1";
+const FORM_NAME = "TDG Incident Contact";
+
+
+function OnLoad(executionContext) {
+
+    //get context
+    globalContext = glHelper.getGlobalContext();
+    var formContext = executionContext.getFormContext();
+    globalFormContext = formContext;
+
+    //record id
+    var id = glHelper.GetCurrentRecordId(formContext);
+
+    // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+    let formType = glHelper.GetFormType(formContext);
+
+    //Get current user roles
+    let currentUserRoles = glHelper.getGlobalContext().userSettings.roles.getAll();
+
+
+    //hide all sections on load, required section to be determined
+    hideAllActionTypeSections(formContext, currentUserRoles);
+
+    ActionProcess(globalFormContext);
+}
+
+function OnSave(executionContext) {
+    // let formContext = executionContext.getFormContext();
+}
+
+function hideAllActionTypeSections(formContext, currentUserRoles) {
+    let isSysAdmin = false;
+    if (currentUserRoles && currentUserRoles.find(r => r.name === "System Administrator")) isSysAdmin = true;
+
+    glHelper.SetTabVisibility(formContext, TabNames.TAB_SUMMARY, true);
+    glHelper.SetTabVisibility(formContext, TabNames.TAB_DETAIL, isSysAdmin);
+    glHelper.SetTabVisibility(formContext, TabNames.TAB_SCHEDULING, false);
+    glHelper.SetTabVisibility(formContext, TabNames.TAB_FILES, false);
+
+    glHelper.SetSectionVisibility(formContext, TabNames.TAB_SUMMARY, SummarySections.ContactInformation, true);
+        if (formContext.ui.tabs.get(TabNames.TAB_SUMMARY).sections.get(SummarySections.Account))
+            glHelper.SetSectionVisibility(formContext, TabNames.TAB_SUMMARY, SummarySections.Account, true);
+    glHelper.SetSectionVisibility(formContext, TabNames.TAB_SUMMARY, SummarySections.Timeline, isSysAdmin);
+    glHelper.SetSectionVisibility(formContext, TabNames.TAB_SUMMARY, SummarySections.Assistant, isSysAdmin);
+    glHelper.SetSectionVisibility(formContext, TabNames.TAB_SUMMARY, SummarySections.Company, isSysAdmin);
+    glHelper.SetSectionVisibility(formContext, TabNames.TAB_SUMMARY, SummarySections.Map, isSysAdmin);
+    glHelper.SetSectionVisibility(formContext, TabNames.TAB_SUMMARY, SummarySections.BusinessCard, isSysAdmin);
+
+    glHelper.SetSectionVisibility(formContext, TabNames.TAB_DETAIL, DetailSections.ContactPreferences, true);
+    glHelper.SetSectionVisibility(formContext, TabNames.TAB_DETAIL, DetailSections.Billing, isSysAdmin);
+    glHelper.SetSectionVisibility(formContext, TabNames.TAB_DETAIL, DetailSections.Marketing, isSysAdmin);
+    glHelper.SetSectionVisibility(formContext, TabNames.TAB_DETAIL, DetailSections.PersonalInformation, isSysAdmin);
+    glHelper.SetSectionVisibility(formContext, TabNames.TAB_DETAIL, DetailSections.PersonalNotes, isSysAdmin);
+    glHelper.SetSectionVisibility(formContext, TabNames.TAB_DETAIL, DetailSections.Shipping, isSysAdmin);
+
+    //Check FIELD_ACCOUNT_NAME field exist on the form before to Set Visible/RequiredLevel
+    // Changes Related to the N:N relationsheep for Account and Contact tables
+    if (formContext.getAttribute(FIELD_ACCOUNT_NAME) != null) {
+        glHelper.SetControlVisibility(formContext, FIELD_ACCOUNT_NAME, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_ACCOUNT_NAME, true);
+    }
+    // End changes
+    glHelper.SetRequiredLevel(formContext, FIELD_TITLE, true);
+    //Task 165369: Remove mandatory requirement for email field in contact record
+    //glHelper.SetRequiredLevel(formContext, FIELD_EMAIL, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_BUSINESS_PHONE_NUMBER, true);
+    var formName = formContext.ui.formSelector.getCurrentItem().getLabel();
+    if (formName != null && formName == FORM_NAME)
+        glHelper.SetRequiredLevel(formContext, FIELD_BUSINESS_PHONE_NUMBER, false);
+}
+
+function ActionProcess(formContext) {
+    //alert('Banana');
+}
+
