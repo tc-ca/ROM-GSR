@@ -921,38 +921,15 @@
                   },
                   "type": "If"
                 },
-                "Get_a_row_by_ID": {
-                  "runAfter": {},
-                  "metadata": {
-                    "operationMetadataId": "e97b5cd5-1dfc-4450-a453-85006fffa902"
-                  },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "connectionName": "shared_commondataserviceforapps",
-                      "operationId": "GetItem",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                    },
-                    "parameters": {
-                      "entityName": "ovs_organization_contacts",
-                      "recordId": "@items('Apply_to_each_Connection')?['ovs_organization_contactid']"
-                    },
-                    "authentication": "@parameters('$authentication')"
-                  }
-                },
                 "Set_variable_2": {
-                  "runAfter": {
-                    "Get_a_row_by_ID": [
-                      "Succeeded"
-                    ]
-                  },
+                  "runAfter": {},
                   "metadata": {
                     "operationMetadataId": "99e96c86-7024-4d1a-9277-8b3cd97d7a45"
                   },
                   "type": "SetVariable",
                   "inputs": {
                     "name": "ContactRole",
-                    "value": "@outputs('Get_a_row_by_ID')?['body/_ovs_role_id_value']"
+                    "value": "@{items('Apply_to_each_Connection')?['Role.ovs_name']}"
                   }
                 }
               },

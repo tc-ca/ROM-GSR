@@ -9,6 +9,15 @@
         "api": {
           "name": "shared_commondataserviceforapps"
         }
+      },
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
       }
     },
     "definition": {
@@ -163,7 +172,7 @@
                       }
                     },
                     "Apply_to_each_contact": {
-                      "foreach": "@outputs('List_rows_ALL_TGD_connections_contacts')?['body/value']",
+                      "foreach": "@outputs('Get_All_related_Contacts_from_Organization_contact')?['body/value']",
                       "actions": {
                         "ContactGUID": {
                           "runAfter": {},
@@ -171,7 +180,7 @@
                             "operationMetadataId": "20a79309-dd13-47e0-8242-68a1bb474b2d"
                           },
                           "type": "Compose",
-                          "inputs": "@items('Apply_to_each_contact')?['_record2id_value']"
+                          "inputs": "@items('Apply_to_each_contact')?['_ovs_contact_id_value']"
                         },
                         "Append_to_ActivityParty_will_be_used_for_15_days_notification": {
                           "runAfter": {
@@ -403,7 +412,7 @@
                             "operationMetadataId": "63e5cf12-e252-4693-a7e2-d3052e4e54b4"
                           },
                           "type": "Compose",
-                          "inputs": "@items('Apply_to_each_contact')?['_record2id_value@OData.Community.Display.V1.FormattedValue']"
+                          "inputs": "@items('Apply_to_each_contact')?['ovs_name']"
                         }
                       },
                       "runAfter": {
@@ -578,7 +587,7 @@
                     },
                     "Set_variable_Activity_party_string_List_initial_value": {
                       "runAfter": {
-                        "List_rows_ALL_TGD_connections_contacts": [
+                        "Get_All_related_Contacts_from_Organization_contact": [
                           "Succeeded"
                         ]
                       },
@@ -589,6 +598,29 @@
                       "inputs": {
                         "name": "ActivityPartStringList",
                         "value": "{\"participationtypemask\": 1,\n\"partyid@odata.bind\": \"\\\\queues\\\\@{outputs('CRSqueue')}\"}"
+                      }
+                    },
+                    "Get_All_related_Contacts_from_Organization_contact": {
+                      "runAfter": {
+                        "List_rows_ALL_TGD_connections_contacts": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "c45b6da1-14ca-40d6-8535-d482e325d5d9"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "ListRecords",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "ovs_organization_contacts",
+                          "fetchXml": "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\n<entity name='ovs_organization_contact'>\n<attribute name='ovs_organization_contactid'/>\n<attribute name='ovs_organization_id'/>\n<attribute name='ovs_contact_id'/>\n<attribute name='ovs_phonenumber_business_num'/>\n<attribute name='ovs_job_title_nm'/>\n<order attribute='ovs_organization_id' descending='false'/>\n<filter type='and'>\n<condition attribute='statecode' operator='eq' value='0'/>\n<condition attribute='ovs_organization_id' operator='eq'  value='@{outputs('OrganizationGUID')}'/>\n</filter>\n<link-entity name='contact' from='contactid' to='ovs_contact_id' visible='false' link-type='outer' alias='a_c5d27fb9780cef119f89002248b1c9b3'>\n<attribute name='emailaddress1'/>\n<attribute name='telephone1'/>\n<attribute name='fullname'/>\n<filter type=\"and\">\n<condition attribute=\"ovs_mbun\" operator=\"not-null\"/>\n</filter>\n</link-entity>\n</entity>\n</fetch>"
+                        },
+                        "authentication": "@parameters('$authentication')"
                       }
                     }
                   },
