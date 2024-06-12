@@ -70,7 +70,7 @@
         }
       },
       "actions": {
-        "List_rows_-_Related_TGD_Connection_Contacts": {
+        "List_rows_-_Related_TGD_Contacts": {
           "runAfter": {
             "Initialize_variable_-_Email_Body": [
               "Succeeded"
@@ -87,14 +87,14 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "entityName": "connections",
-              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"connection\">\n<attribute name=\"record2id\"/>\n<attribute name=\"record1id\"/>\n<attribute name=\"connectionid\"/>\n<attribute name=\"effectivestart\"/>\n<filter type=\"and\">\n<condition attribute=\"record2objecttypecode\" operator=\"eq\" value=\"2\"/>\n<condition attribute=\"record1objecttypecode\" operator=\"eq\" value=\"1\"/>\n<condition attribute=\"effectivestart\" operator=\"not-null\"/>\n<condition attribute=\"record1roleid\" operator=\"not-null\"/>\n</filter>\n<link-entity name=\"account\" from=\"accountid\" to=\"record1id\" link-type=\"inner\" alias=\"a_b319a54f03644ed1a2f0dc0bae8c384d\">\n<attribute name=\"name\"/>\n<attribute name=\"primarycontactid\"/>\n<filter type=\"and\">\n<condition attribute=\"accountid\" operator=\"eq\"  value=\"@{variables('Organization GUID')}\"/>\n</filter>\n</link-entity>\n<link-entity name=\"contact\" from=\"contactid\" to=\"record2id\" link-type=\"inner\" alias=\"a_72c81aaa72c549acbe9e0deee5bd0ad2\">\n<attribute name=\"jobtitle\"/>\n<attribute name=\"fullname\"/>\n<attribute name=\"emailaddress1\"/>\n<filter type=\"and\">\n<condition attribute=\"ovs_mbun\" operator=\"not-null\"/>\n</filter>\n</link-entity>\n</entity>\n</fetch>"
+              "entityName": "ovs_organization_contacts",
+              "fetchXml": "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\n<entity name='ovs_organization_contact'>\n<attribute name='ovs_organization_contactid'/>\n<attribute name='ovs_organization_id'/>\n<attribute name='ovs_contact_id'/>\n<attribute name='ovs_phonenumber_business_num'/>\n<attribute name='ovs_job_title_nm'/>\n<order attribute='ovs_organization_id' descending='false'/>\n<filter type='and'>\n<condition attribute='statecode' operator='eq' value='0'/>\n<condition attribute='ovs_organization_id' operator='eq'  value='@{variables('Organization GUID')}'/>\n</filter>\n<link-entity name='contact' from='contactid' to='ovs_contact_id' visible='false' link-type='outer' alias='cont'>\n<attribute name='emailaddress1'/>\n<attribute name='telephone1'/>\n<attribute name='fullname'/>\n<filter type=\"and\">\n<condition attribute=\"ovs_mbun\" operator=\"not-null\"/>\n</filter>\n</link-entity>\n</entity>\n</fetch>"
             },
             "authentication": "@parameters('$authentication')"
           }
         },
         "Apply_to_each_-_Contact": {
-          "foreach": "@outputs('List_rows_-_Related_TGD_Connection_Contacts')?['body/value']",
+          "foreach": "@outputs('List_rows_-_Related_TGD_Contacts')?['body/value']",
           "actions": {
             "Set_variable_-_Contact_GUID": {
               "runAfter": {},
@@ -104,7 +104,7 @@
               "type": "SetVariable",
               "inputs": {
                 "name": "Contact GUID",
-                "value": "@{items('Apply_to_each_-_Contact')?['_record2id_value']}"
+                "value": "@{items('Apply_to_each_-_Contact')?['_ovs_contact_id_value']}"
               }
             },
             "Set_variable_-_Contact_Full_Name": {
@@ -119,7 +119,7 @@
               "type": "SetVariable",
               "inputs": {
                 "name": "Contact Full Name",
-                "value": "@{items('Apply_to_each_-_Contact')?['_record2id_value@OData.Community.Display.V1.FormattedValue']}"
+                "value": "@{items('Apply_to_each_-_Contact')?['cont.fullname']}"
               }
             },
             "Append_to_array_variable_-__Activity_Party": {
@@ -142,7 +142,7 @@
             }
           },
           "runAfter": {
-            "List_rows_-_Related_TGD_Connection_Contacts": [
+            "List_rows_-_Related_TGD_Contacts": [
               "Succeeded"
             ]
           },
