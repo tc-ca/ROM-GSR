@@ -235,12 +235,14 @@ var AccountDGAIS_org = (function (window, document) {
 
             //filter Relationship Type
             filter_customertypecode(formContext);
+            //filter Address Type
+            filter_addressType(formContext);
+
 
             // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
             formType = glHelper.GetFormType(formContext);
 
             // Retrieve customertypecode 
-            var _customerType;
             var rTypeCode = formContext.getAttribute("customertypecode");
             if (rTypeCode) _customerType = formContext.getAttribute("customertypecode").getValue();
             rTypeCode.removeOnChange(AccountDGAIS_org.relationShip_OnChange); // avoid binding multiple event handlers
@@ -260,8 +262,8 @@ var AccountDGAIS_org = (function (window, document) {
 
             //Address type
             var adrType = formContext.getAttribute("ovs_address_type");
-            adrType.removeOnChange(AccountCRS_org.AddressType_OnChange);
-            adrType.addOnChange(AccountCRS_org.AddressType_OnChange);
+            adrType.removeOnChange(AccountDGAIS_org.AddressType_OnChange);
+            adrType.addOnChange(AccountDGAIS_org.AddressType_OnChange);
             //fire address type on change
             adrType.fireOnChange();
 

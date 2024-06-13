@@ -11,9 +11,10 @@
       <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
         <row name="result" id="ovs_organization_contactid">
           <cell name="ovs_contact_id" width="100" />
-          <cell name="ovs_phonenumber_mobile_num" width="100" />
-          <cell name="ovs_phonenumber_business_num" width="100" />
+          <cell name="a_4d7f052c2a754684aa8aa8fb536dd6a5.emailaddress1" width="130" />
+          <cell name="a_4d7f052c2a754684aa8aa8fb536dd6a5.telephone1" width="185" />
           <cell name="ovs_job_title_nm" width="100" />
+          <cell name="ovs_phonenumber_business_num" width="100" />
           <cell name="ovs_role_id" width="100" />
         </row>
       </grid>
@@ -23,14 +24,17 @@
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
         <entity name="ovs_organization_contact">
           <attribute name="ovs_organization_contactid" />
-          <attribute name="ovs_phonenumber_mobile_num" />
           <attribute name="ovs_phonenumber_business_num" />
           <attribute name="ovs_job_title_nm" />
-          <attribute name="ovs_role_id" />
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="0" />
           </filter>
           <attribute name="ovs_contact_id" />
+          <link-entity alias="a_4d7f052c2a754684aa8aa8fb536dd6a5" name="contact" to="ovs_contact_id" from="contactid" link-type="outer" visible="false">
+            <attribute name="emailaddress1" />
+            <attribute name="telephone1" />
+          </link-entity>
+          <attribute name="ovs_role_id" />
         </entity>
       </fetch>
     </fetchxml>

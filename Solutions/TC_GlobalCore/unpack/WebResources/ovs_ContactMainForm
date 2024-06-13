@@ -35,6 +35,7 @@ const FIELD_ACCOUNT_NAME = "parentcustomerid";
 const FIELD_TITLE = "jobtitle";
 const FIELD_EMAIL = "emailaddress1";
 const FIELD_BUSINESS_PHONE_NUMBER = "telephone1";
+const FORM_NAME = "TDG Incident Contact";
 
 
 function OnLoad(executionContext) {
@@ -100,7 +101,9 @@ function hideAllActionTypeSections(formContext, currentUserRoles) {
     //Task 165369: Remove mandatory requirement for email field in contact record
     //glHelper.SetRequiredLevel(formContext, FIELD_EMAIL, true);
     glHelper.SetRequiredLevel(formContext, FIELD_BUSINESS_PHONE_NUMBER, true);
-
+    var formName = formContext.ui.formSelector.getCurrentItem().getLabel();
+    if (formName != null && formName == FORM_NAME)
+        glHelper.SetRequiredLevel(formContext, FIELD_BUSINESS_PHONE_NUMBER, false);
 }
 
 function ActionProcess(formContext) {

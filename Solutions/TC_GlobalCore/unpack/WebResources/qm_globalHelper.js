@@ -653,6 +653,32 @@
     
 
     /****************************************************************************************
+    MULTI SELECT CHOICE
+    ****************************************************************************************/
+
+    function openOtherMultiselect(formContext, mChoiceControlName, valueOfOthersOptionAsString, otherTxtControlName) {
+
+        var optionString, visible, required;
+        var multiSelectOptionSet = formContext.getAttribute(mChoiceControlName).getValue();
+        var other = formContext.getAttribute(otherTxtControlName);
+
+        if (multiSelectOptionSet != null) {
+            optionString = multiSelectOptionSet.toString();
+            visible = multiSelectOptionSet != null && optionString.indexOf(valueOfOthersOptionAsString) !== -1;
+            required = (multiSelectOptionSet != null && optionString.indexOf(valueOfOthersOptionAsString) !== -1)
+                ? "required" : "none";
+        }
+        else {
+            visible = multiSelectOptionSet != null;
+            required = (multiSelectOptionSet != null) ? "required" : "none";
+        }
+        if (!visible) other.setValue(null);
+        formContext.getControl(otherTxtControlName).setVisible(visible);
+        other.setRequiredLevel(required);
+    }
+
+
+    /****************************************************************************************
     CONTROLS and ATTRIBUTES
     ****************************************************************************************/
 
@@ -955,6 +981,7 @@
         isBeforeDate: isBeforeDate,
         isInDateRange: isInDateRange,
         isInDateTimeRange: isInDateTimeRange,
+        openOtherMultiselect: openOtherMultiselect,
     };
 
     //********************public methods end***************

@@ -10,12 +10,15 @@
     <layoutxml>
       <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
         <row name="result" id="ovs_organization_contactid">
-          <cell name="ovs_organization_id" width="300" />
+          <cell name="ovs_organization_id" width="113" />
+          <cell name="a_95acc13ec44643d6a96f8843c3d9f0b8.name" width="219" />
+          <cell name="a_95acc13ec44643d6a96f8843c3d9f0b8.ovs_legalname" width="195" />
           <cell name="ovs_contact_id" width="150" />
+          <cell name="a_03c99426f0144514b3a53842520f2f53.emailaddress1" width="130" />
+          <cell name="a_03c99426f0144514b3a53842520f2f53.telephone1" width="185" />
           <cell name="ovs_job_title_nm" width="150" />
           <cell name="ovs_phonenumber_business_num" width="200" />
-          <cell name="ovs_phonenumber_mobile_num" width="200" />
-          <cell name="ovs_email_address_business_txt" width="200" />
+          <cell name="ovs_role_id" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -27,13 +30,19 @@
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="0" />
           </filter>
-          <attribute name="ovs_organization_id" />
           <attribute name="ovs_contact_id" />
           <attribute name="ovs_job_title_nm" />
           <attribute name="ovs_phonenumber_business_num" />
-          <attribute name="ovs_email_address_business_txt" />
-          <order attribute="ovs_organization_id" descending="false" />
-          <attribute name="ovs_phonenumber_mobile_num" />
+          <link-entity alias="a_95acc13ec44643d6a96f8843c3d9f0b8" name="account" to="ovs_organization_id" from="accountid" link-type="outer" visible="false">
+            <attribute name="name" />
+            <attribute name="ovs_legalname" />
+          </link-entity>
+          <link-entity alias="a_03c99426f0144514b3a53842520f2f53" name="contact" to="ovs_contact_id" from="contactid" link-type="outer" visible="false">
+            <attribute name="emailaddress1" />
+            <attribute name="telephone1" />
+          </link-entity>
+          <attribute name="ovs_organization_id" />
+          <attribute name="ovs_role_id" />
         </entity>
       </fetch>
     </fetchxml>
