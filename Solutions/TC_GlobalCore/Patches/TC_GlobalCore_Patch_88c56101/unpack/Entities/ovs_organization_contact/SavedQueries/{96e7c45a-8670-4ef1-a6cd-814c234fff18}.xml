@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{96e7c45a-8670-4ef1-a6cd-814c234fff18}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
+        <row name="result" id="ovs_organization_contactid">
+          <cell name="ovs_organization_id" width="113" />
+          <cell name="a_95acc13ec44643d6a96f8843c3d9f0b8.name" width="219" />
+          <cell name="a_95acc13ec44643d6a96f8843c3d9f0b8.ovs_legalname" width="195" />
+          <cell name="ovs_contact_id" width="150" />
+          <cell name="a_03c99426f0144514b3a53842520f2f53.emailaddress1" width="130" />
+          <cell name="a_03c99426f0144514b3a53842520f2f53.telephone1" width="185" />
+          <cell name="ovs_job_title_nm" width="150" />
+          <cell name="ovs_phonenumber_business_num" width="200" />
+          <cell name="ovs_role_id" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ovs_organization_contact">
+          <attribute name="ovs_organization_contactid" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="ovs_contact_id" />
+          <attribute name="ovs_job_title_nm" />
+          <attribute name="ovs_phonenumber_business_num" />
+          <link-entity alias="a_95acc13ec44643d6a96f8843c3d9f0b8" name="account" to="ovs_organization_id" from="accountid" link-type="outer" visible="false">
+            <attribute name="name" />
+            <attribute name="ovs_legalname" />
+          </link-entity>
+          <link-entity alias="a_03c99426f0144514b3a53842520f2f53" name="contact" to="ovs_contact_id" from="contactid" link-type="outer" visible="false">
+            <attribute name="emailaddress1" />
+            <attribute name="telephone1" />
+          </link-entity>
+          <attribute name="ovs_organization_id" />
+          <attribute name="ovs_role_id" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Active Organization Contacts" languagecode="1033" />
+      <LocalizedName description="Contacts actifs de l'organisation" languagecode="1036" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
