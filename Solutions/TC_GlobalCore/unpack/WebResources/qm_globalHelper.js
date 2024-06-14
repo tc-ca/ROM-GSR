@@ -656,25 +656,27 @@
     MULTI SELECT CHOICE
     ****************************************************************************************/
 
-    function openOtherMultiselect(formContext, mChoiceControlName, valueOfOthersOptionAsString, otherTxtControlName) {
+    function openOtherFromChoice_s(formContext, mChoiceControlName, valueOfOthersOptionAsString, otherTxtControlName) {
 
-        var optionString, visible, required;
-        var multiSelectOptionSet = formContext.getAttribute(mChoiceControlName).getValue();
+        var visible = false;
+        var required = "none";
         var other = formContext.getAttribute(otherTxtControlName);
+        var options = formContext.getAttribute(mChoiceControlName).getSelectedOption();
+        //any selected
+        if (options != undefined && options.length > 0) {
 
-        if (multiSelectOptionSet != null) {
-            optionString = multiSelectOptionSet.toString();
-            visible = multiSelectOptionSet != null && optionString.indexOf(valueOfOthersOptionAsString) !== -1;
-            required = (multiSelectOptionSet != null && optionString.indexOf(valueOfOthersOptionAsString) !== -1)
-                ? "required" : "none";
+            for (var i = 0; i < options.length; i++) {
+                //any or both death and injuries selected
+                if (options[i].value.toString() == valueOfOthersOptionAsString) {
+                    visible = true;
+                    required = "required";
+                    break;
+                }
+            }
         }
-        else {
-            visible = multiSelectOptionSet != null;
-            required = (multiSelectOptionSet != null) ? "required" : "none";
-        }
+        other.setRequiredLevel(required);
         if (!visible) other.setValue(null);
         formContext.getControl(otherTxtControlName).setVisible(visible);
-        other.setRequiredLevel(required);
     }
 
 
@@ -981,7 +983,7 @@
         isBeforeDate: isBeforeDate,
         isInDateRange: isInDateRange,
         isInDateTimeRange: isInDateTimeRange,
-        openOtherMultiselect: openOtherMultiselect,
+        openOtherFromChoice_s: openOtherFromChoice_s,
     };
 
     //********************public methods end***************

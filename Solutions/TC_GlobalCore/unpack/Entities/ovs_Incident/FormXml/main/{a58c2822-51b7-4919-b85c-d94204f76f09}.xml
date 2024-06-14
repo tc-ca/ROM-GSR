@@ -91,12 +91,6 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{b32251cc-a316-4e6e-a159-b8f9ee5762f4}" locklevel="0" colspan="1" rowspan="1" visible="true">
-                        <labels>
-                          <label description="Main Impact" languagecode="1033" />
-                        </labels>
-                        <control id="ovs_main_impact_cd" classid="{4AA28AB7-9C13-4F57-A73D-AD894D048B5F}" datafieldname="ovs_main_impact_cd" disabled="false" />
-                      </cell>
                       <cell locklevel="0" id="{4cf37c4f-58d0-44c8-8d49-9de47899658f}" showlabel="false">
                         <labels>
                           <label description="" languagecode="1033" />
@@ -341,14 +335,16 @@
                       <cell id="{a29e94a1-7bb3-46df-b4a3-ee323e86dc12}" locklevel="0" colspan="1" rowspan="1">
                         <labels>
                           <label description="Physical Impact Flag" languagecode="1033" />
+                          <label description="Marqueur pour l’impact physique" languagecode="1036" />
                         </labels>
-                        <control id="ovs_physical_impact_flag_ind" classid="{67FAC785-CD58-4F9F-ABB3-4B7DDC6ED5ED}" datafieldname="ovs_physical_impact_flag_ind" disabled="false" />
+                        <control id="ovs_physical_impact_flag_ind" classid="{F9A8A302-114E-466A-B582-6771B2AE0D92}" datafieldname="ovs_physical_impact_flag_ind" disabled="false" uniqueid="{430ab37a-1a2a-4b27-b641-2a3e4023e258}" />
                       </cell>
                     </row>
                     <row>
                       <cell id="{96b1aa22-a542-49fe-8b7d-6f27781d5c0e}" locklevel="0" colspan="1" rowspan="1">
                         <labels>
                           <label description="Physical Impact Characteristics" languagecode="1033" />
+                          <label description="Caractéristiques de l’impact physique" languagecode="1036" />
                         </labels>
                         <control id="ovs_physical_impact_cds" classid="{4AA28AB7-9C13-4F57-A73D-AD894D048B5F}" datafieldname="ovs_physical_impact_cds" disabled="false" />
                       </cell>
@@ -357,6 +353,7 @@
                       <cell id="{3151ae44-df12-4ade-9c0e-ce55a400a4d7}" locklevel="0" colspan="1" rowspan="1" visible="false">
                         <labels>
                           <label description="Other Physical Impact Characteristics" languagecode="1033" />
+                          <label description="Autre caractéristiques de l’impact physique" languagecode="1036" />
                         </labels>
                         <control id="ovs_other_physical_impact_txt" classid="{4273EDBD-AC1D-40D3-9FB2-095C621B552D}" datafieldname="ovs_other_physical_impact_txt" disabled="false" />
                       </cell>
@@ -365,14 +362,16 @@
                       <cell id="{89ba2f6d-75ca-4c49-86a0-68c97a9e8fab}" locklevel="0" colspan="1" rowspan="1">
                         <labels>
                           <label description="Was there an Evacuation as a result to the incident?" languagecode="1033" />
+                          <label description=" L'incident a-t-il nécessité une évacuation?" languagecode="1036" />
                         </labels>
-                        <control id="ovs_evacuation_due_incident_ind" classid="{67FAC785-CD58-4F9F-ABB3-4B7DDC6ED5ED}" datafieldname="ovs_evacuation_due_incident_ind" disabled="false" />
+                        <control id="ovs_evacuation_due_incident_ind" classid="{F9A8A302-114E-466A-B582-6771B2AE0D92}" datafieldname="ovs_evacuation_due_incident_ind" disabled="false" uniqueid="{365d5ce4-8760-4331-ade7-8334d5150f00}" />
                       </cell>
                     </row>
                     <row>
                       <cell id="{ada31595-c88b-4117-8026-2fb118d20912}" locklevel="0" colspan="1" rowspan="1">
                         <labels>
                           <label description="Evacuation Profile" languagecode="1033" />
+                          <label description="Profil de l’évacuation" languagecode="1036" />
                         </labels>
                         <control id="ovs_evacuation_profile_cds" classid="{4AA28AB7-9C13-4F57-A73D-AD894D048B5F}" datafieldname="ovs_evacuation_profile_cds" disabled="false" />
                       </cell>
@@ -647,6 +646,50 @@
               <EnableFiltering static="true" type="Enum">no</EnableFiltering>
               <HideNestedGridColumnHeader static="true" type="Enum">yes</HideNestedGridColumnHeader>
               <EnableJumpBar static="true" type="Enum">no</EnableJumpBar>
+            </parameters>
+          </customControl>
+        </controlDescription>
+        <controlDescription forControl="{430ab37a-1a2a-4b27-b641-2a3e4023e258}">
+          <customControl id="{67FAC785-CD58-4F9F-ABB3-4B7DDC6ED5ED}">
+            <parameters>
+              <datafieldname>ovs_physical_impact_flag_ind</datafieldname>
+            </parameters>
+          </customControl>
+          <customControl formFactor="0" name="MscrmControls.FieldControls.ToggleControl">
+            <parameters>
+              <value type="TwoOptions">ovs_physical_impact_flag_ind</value>
+            </parameters>
+          </customControl>
+          <customControl formFactor="2" name="MscrmControls.FieldControls.ToggleControl">
+            <parameters>
+              <value type="TwoOptions">ovs_physical_impact_flag_ind</value>
+            </parameters>
+          </customControl>
+          <customControl formFactor="1" name="MscrmControls.FieldControls.ToggleControl">
+            <parameters>
+              <value type="TwoOptions">ovs_physical_impact_flag_ind</value>
+            </parameters>
+          </customControl>
+        </controlDescription>
+        <controlDescription forControl="{365d5ce4-8760-4331-ade7-8334d5150f00}">
+          <customControl id="{67FAC785-CD58-4F9F-ABB3-4B7DDC6ED5ED}">
+            <parameters>
+              <datafieldname>ovs_evacuation_due_incident_ind</datafieldname>
+            </parameters>
+          </customControl>
+          <customControl formFactor="0" name="MscrmControls.FieldControls.ToggleControl">
+            <parameters>
+              <value type="TwoOptions">ovs_evacuation_due_incident_ind</value>
+            </parameters>
+          </customControl>
+          <customControl formFactor="2" name="MscrmControls.FieldControls.ToggleControl">
+            <parameters>
+              <value type="TwoOptions">ovs_evacuation_due_incident_ind</value>
+            </parameters>
+          </customControl>
+          <customControl formFactor="1" name="MscrmControls.FieldControls.ToggleControl">
+            <parameters>
+              <value type="TwoOptions">ovs_evacuation_due_incident_ind</value>
             </parameters>
           </customControl>
         </controlDescription>

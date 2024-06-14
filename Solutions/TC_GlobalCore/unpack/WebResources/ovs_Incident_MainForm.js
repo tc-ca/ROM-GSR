@@ -35,13 +35,27 @@ var TDG_Incident_MainForm = (function (window, document) {
 
             var closuretype = formContext.getAttribute("ovs_closure_type_cd");
             closuretype.removeOnChange(TDG_Incident_MainForm.ClosureType_OnChange);
-            closuretype.addOnChange(TDG_Incident_MainForm.ClosureType_OnChange);
-            closuretype.fireOnChange();
+            closuretype.addOnChange(TDG_Incident_MainForm.ClosureType_OnChange);            
 
             var source = formContext.getAttribute("ovs_source_cds");
             source.removeOnChange(TDG_Incident_MainForm.Source_OnChange);
             source.addOnChange(TDG_Incident_MainForm.Source_OnChange);
             source.fireOnChange();
+
+            var phImpact = formContext.getAttribute("ovs_physical_impact_cds");
+            phImpact.removeOnChange(TDG_Incident_MainForm.PhisicalImpact_OnChange);
+            phImpact.addOnChange(TDG_Incident_MainForm.PhisicalImpact_OnChange);
+           
+            var phImpactFlag = formContext.getAttribute("ovs_physical_impact_flag_ind");
+            phImpactFlag.removeOnChange(TDG_Incident_MainForm.PhisicalImpactFlag_OnChange);
+            phImpactFlag.addOnChange(TDG_Incident_MainForm.PhisicalImpactFlag_OnChange);
+            phImpactFlag.fireOnChange();
+
+            var ecacuatioFlag = formContext.getAttribute("ovs_evacuation_due_incident_ind");
+            ecacuatioFlag.removeOnChange(TDG_Incident_MainForm.EvacuationProfileFlag_OnChange);
+            ecacuatioFlag.addOnChange(TDG_Incident_MainForm.EvacuationProfileFlag_OnChange);
+            ecacuatioFlag.fireOnChange();
+
 
             if (formType == glHelper.FORMTYPE_CREATE) {
 
@@ -118,6 +132,18 @@ var TDG_Incident_MainForm = (function (window, document) {
             formContext.getControl(isEditable ? "injuries_editable" : "injuries_readonly").refresh();
         },
 
+        ClosureType_OnChange: async function (executionContext) {
+            try {
+                var formContext = executionContext.getFormContext();
+                glHelper.openOtherFromChoice_s(formContext, "ovs_closure_type_cd", "11", "ovs_closure_type_other_txt");
+
+
+            } catch (error) {
+                Xrm.Navigation.openErrorDialog({ message: error })
+            } finally {
+            }
+        },
+
         Closure_OnChange: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
@@ -133,25 +159,46 @@ var TDG_Incident_MainForm = (function (window, document) {
             glHelper.SetDisabled(formContext, "ovs_duration_num", !isClosure);
 
             glHelper.SetRequiredLevel(formContext, "ovs_closure_type_cd", isClosure);
-        },
 
-        ClosureType_OnChange: async function (executionContext) {
-            try {
-                var formContext = executionContext.getFormContext();
-                glHelper.openOtherMultiselect(formContext, "ovs_closure_type_cd", "11", "ovs_closure_type_other_txt");
+            TDG_Incident_MainForm.ClosureType_OnChange(executionContext);
 
-
-            } catch (error) {
-                Xrm.Navigation.openErrorDialog({ message: error })
-            } finally {
-            }
         },
 
         Source_OnChange: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
 
-            glHelper.openOtherMultiselect(formContext, "ovs_source_cds", "23", "ovs_other_source_txt");
+            glHelper.openOtherFromChoice_s(formContext, "ovs_source_cds", "23", "ovs_other_source_txt");
+        },
+
+        EvacuationProfileFlag_OnChange: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
+            var flagOn = formContext.getAttribute("ovs_evacuation_due_incident_ind").getValue();
+            if (!flagOn) glHelper.SetValue(formContext, "ovs_evacuation_profile_cds", null);
+            glHelper.SetControlReadOnly(formContext, "ovs_evacuation_profile_cds", !flagOn);
+
+            //glHelper.SetControlVisibility(formContext, "ovs_evacuation_profile_cds", flagOn);
+
+        },
+
+        PhisicalImpact_OnChange: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
+            glHelper.openOtherFromChoice_s(formContext, "ovs_physical_impact_cds", "9", "ovs_other_physical_impact_txt");
+        },
+
+        PhisicalImpactFlag_OnChange: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
+            var flagOn = formContext.getAttribute("ovs_physical_impact_flag_ind").getValue();
+            if (!flagOn) glHelper.SetValue(formContext, "ovs_physical_impact_cds", null);
+            glHelper.SetControlReadOnly(formContext, "ovs_physical_impact_cds", !flagOn);
+            //glHelper.SetControlVisibility(formContext, "ovs_physical_impact_cds", flagOn);
+            TDG_Incident_MainForm.PhisicalImpact_OnChange(executionContext);
         }
     };
     //********************public methods end***************
