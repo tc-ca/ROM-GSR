@@ -1,0 +1,105 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "1am,_nightly": {
+          "recurrence": {
+            "frequency": "Day",
+            "interval": 1,
+            "startTime": "2024-06-14T05:00:00Z"
+          },
+          "metadata": {
+            "operationMetadataId": "56438098-7d02-4675-8808-cedb2f8e73d7"
+          },
+          "type": "Recurrence"
+        }
+      },
+      "actions": {
+        "Get_registrations_by_expiration_date": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "d5a4b26d-7077-43b2-8632-576cce51313b"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_registrations",
+              "$select": "ovs_registrationid",
+              "$filter": "(Microsoft.Dynamics.CRM.Today(PropertyName='ovs_expirydate') and statuscode ne 918640005)"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Iterate_regs": {
+          "foreach": "@outputs('Get_registrations_by_expiration_date')?['body/value']",
+          "actions": {
+            "Update_to_expired": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "28d0d129-6d4a-4d8c-9504-2e72b2b04847"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_registrations",
+                  "recordId": "@items('Iterate_regs')?['ovs_registrationid']",
+                  "item/statuscode": 918640005
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Get_registrations_by_expiration_date": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b7880790-2c62-49d8-acf2-261886b0c330"
+          },
+          "type": "Foreach",
+          "runtimeConfiguration": {
+            "concurrency": {
+              "repetitions": 20
+            }
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
