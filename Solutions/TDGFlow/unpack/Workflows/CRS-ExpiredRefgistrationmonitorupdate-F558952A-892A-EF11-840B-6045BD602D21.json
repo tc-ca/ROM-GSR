@@ -53,7 +53,7 @@
             "parameters": {
               "entityName": "ovs_registrations",
               "$select": "ovs_registrationid",
-              "$filter": "(Microsoft.Dynamics.CRM.Today(PropertyName='ovs_expirydate') and statuscode ne 918640005)"
+              "$filter": "(Microsoft.Dynamics.CRM.OnOrBefore(PropertyName='ovs_expirydate',PropertyValue='@{formatDateTime(utcnow(),'yyyy-MM-dd')}') and statuscode ne 918640005)"
             },
             "authentication": "@parameters('$authentication')"
           }
