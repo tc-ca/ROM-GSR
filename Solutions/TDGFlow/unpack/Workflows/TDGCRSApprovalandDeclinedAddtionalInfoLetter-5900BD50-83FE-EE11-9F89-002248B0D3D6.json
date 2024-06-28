@@ -109,7 +109,7 @@
       "actions": {
         "List_rows_Registration": {
           "runAfter": {
-            "Initialize_variable_Contact_Role": [
+            "Append_to_array_variable_Send_Email_Primary_Contacts": [
               "Succeeded"
             ]
           },
@@ -279,19 +279,10 @@
                         },
                         "parameters": {
                           "entityName": "emails",
-                          "item/activitypointer_activity_parties": [
-                            {
-                              "participationtypemask": 1,
-                              "partyid@odata.bind": "@variables('Sender Email')"
-                            },
-                            {
-                              "participationtypemask": 2,
-                              "partyid@odata.bind": "@variables('Primary Contact')"
-                            }
-                          ],
-                          "item/description": "<p>@{variables('Primary Contact Name')}. </p>\n<p>A decision has been made regarding your registration request. </p>\n<p>Your registration has been approved. Please print this approval letter for your files.</p>\n<p>You may log in to TDG Online portal <a href=\"@{variables('Portal URL')}\">@{variables('Portal URL')}</a> to see your status.</p>\n<p>CANUTEC Registration Team</p>\n\n<p>@{variables('Primary Contact Name')}.</p>\n<p>Une décision a été prise concernant votre demande d'inscription.</p>\n<p>Votre inscription a été approuvée. Veuillez imprimer cette lettre d'approbation pour vos dossiers. </p>\n<p>Vous pouvez vous connecter au portail TMD En ligne <a href=\"@{variables('Portal URL')}\">@{variables('Portal URL')}</a> pour voir votre statut..</p>\n<p>L'équipe d'inscription CANUTEC</p>",
+                          "item/activitypointer_activity_parties": "@variables('Primary Contacts')",
+                          "item/description": "<p>@{variables('OrganizationName')}, a decision has been made regarding your registration request.</p>\n<p>Your registration has been approved. Please print this approval letter for your files.</p>\n<p>You may log in to TDG Online portal @{variables('Portal URL')} to see your status.</p>\n<p>&nbsp;</p>\n<p>CANUTEC Registration Team</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>@{variables('OrganizationName')}, une décision a été prise concernant votre demande d'inscription.</p>\n<p>Votre inscription a été approuvée. Veuillez imprimer cette lettre d'approbation pour vos dossiers.</p>\n<p>Vous pouvez vous connecter au portail TMD En ligne @{variables('Portal URL')} pour voir votre statut.</p>\n<p>&nbsp;</p>\n<p>L'équipe d'inscription CANUTEC<br>&nbsp;</p>",
                           "item/regardingobjectid_ovs_submission_email@odata.bind": "\\ovs_submissions\\@{triggerOutputs()?['body/ovs_submissionid']}",
-                          "item/subject": "Approved CRS Registration / Inscription au SIC est approuvée"
+                          "item/subject": "Decision Made Regarding Registration Request – Approved  / Décision prise quant à votre demande d’inscription - approuvée"
                         },
                         "authentication": "@parameters('$authentication')"
                       }
@@ -561,7 +552,7 @@
                 "Condition_if_Primary_contact_is_empty": {
                   "actions": {},
                   "runAfter": {
-                    "Set_variable_File_Patch_Blob": [
+                    "Set_variable_3": [
                       "Succeeded"
                     ]
                   },
@@ -605,6 +596,21 @@
                     "operationMetadataId": "97023bcf-0acd-40a8-b1f5-3a860100e5e8"
                   },
                   "type": "If"
+                },
+                "Set_variable_3": {
+                  "runAfter": {
+                    "Set_variable_File_Patch_Blob": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "8a178617-9f19-408d-98de-96d0e6003619"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Portal URL",
+                    "value": " <a href=\"@{parameters('TDGOnlineportal (ovs_TDGOnlineportal)')}\">@{parameters('TDGOnlineportal (ovs_TDGOnlineportal)')}</a>"
+                  }
                 }
               },
               "runAfter": {
@@ -824,7 +830,7 @@
                         "value": "/contacts(@{items('Apply_to_each_Connection')?['Contact.contactid']})"
                       }
                     },
-                    "Append_to_array_variable_3": {
+                    "Append_to_array_variable_To_Recipients": {
                       "runAfter": {
                         "Set_variable_Primary_Contact": [
                           "Succeeded"
@@ -844,7 +850,7 @@
                     },
                     "Set_variable_Primary_Contact_Name": {
                       "runAfter": {
-                        "Append_to_array_variable_3": [
+                        "Append_to_array_variable_Primary_Contacts": [
                           "Succeeded"
                         ]
                       },
@@ -855,6 +861,24 @@
                       "inputs": {
                         "name": "Primary Contact Name",
                         "value": "@{items('Apply_to_each_Connection')?['Contact.fullname']}"
+                      }
+                    },
+                    "Append_to_array_variable_Primary_Contacts": {
+                      "runAfter": {
+                        "Append_to_array_variable_To_Recipients": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "c5a971ed-4faa-4d0c-8c37-544344e4c4fd"
+                      },
+                      "type": "AppendToArrayVariable",
+                      "inputs": {
+                        "name": "Primary Contacts",
+                        "value": {
+                          "participationtypemask": 2,
+                          "partyid@odata.bind": "@{variables('Primary Contact')}"
+                        }
                       }
                     }
                   },
@@ -1268,6 +1292,44 @@
                 "type": "string"
               }
             ]
+          }
+        },
+        "Initialize_variable_Primary_Contacts": {
+          "runAfter": {
+            "Initialize_variable_Contact_Role": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "05bebf85-5c6a-42fc-8e33-b91b7b8bcb60"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Primary Contacts",
+                "type": "array",
+                "value": []
+              }
+            ]
+          }
+        },
+        "Append_to_array_variable_Send_Email_Primary_Contacts": {
+          "runAfter": {
+            "Initialize_variable_Primary_Contacts": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "316877c7-46cd-4f63-826a-9c56910b820b"
+          },
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "Primary Contacts",
+            "value": {
+              "participationtypemask": 1,
+              "partyid@odata.bind": "@{variables('Sender Email')}"
+            }
           }
         }
       }
