@@ -323,6 +323,30 @@
                 "name": "PortalURL",
                 "value": "@{trim(parameters('TDGOnlineportal (ovs_TDGOnlineportal)'))}"
               }
+            },
+            "Add_a_new_row": {
+              "runAfter": {
+                "Update_a_row": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "92a52dc6-d99b-4177-9e2a-70184e0ac5e9"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_organization_contacts",
+                  "item/ovs_contact_id@odata.bind": "\\contacts\\@{outputs('Get_a_row_by_ID')?['body/_ovs_contact_id_value']}",
+                  "item/ovs_organization_id@odata.bind": "\\accounts\\@{outputs('Get_a_row_by_ID')?['body/_ovs_account_id_value']}"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
             }
           },
           "runAfter": {
