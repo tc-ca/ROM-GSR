@@ -324,29 +324,67 @@
                 "value": "@{trim(parameters('TDGOnlineportal (ovs_TDGOnlineportal)'))}"
               }
             },
-            "Add_a_new_row": {
+            "List_rows": {
               "runAfter": {
                 "Update_a_row": [
                   "Succeeded"
                 ]
               },
               "metadata": {
-                "operationMetadataId": "92a52dc6-d99b-4177-9e2a-70184e0ac5e9"
+                "operationMetadataId": "9030df25-820e-47b0-851d-18aab6e21cc4"
               },
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
                   "connectionName": "shared_commondataserviceforapps",
-                  "operationId": "CreateRecord",
+                  "operationId": "ListRecords",
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
                   "entityName": "ovs_organization_contacts",
-                  "item/ovs_contact_id@odata.bind": "\\contacts\\@{outputs('Get_a_row_by_ID')?['body/_ovs_contact_id_value']}",
-                  "item/ovs_organization_id@odata.bind": "\\accounts\\@{outputs('Get_a_row_by_ID')?['body/_ovs_account_id_value']}"
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"ovs_organization_contact\">\n    <attribute name=\"ovs_organization_contactid\" />\n    <attribute name=\"ovs_name\" />\n    <attribute name=\"createdon\" />\n    <order attribute=\"ovs_name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"ovs_contact_id\" operator=\"eq\"  value=\"@{outputs('Get_a_row_by_ID')?['body/_ovs_contact_id_value']}\" />\n      <condition attribute=\"ovs_organization_id\" operator=\"eq\"  value=\"@{outputs('Get_a_row_by_ID')?['body/_ovs_account_id_value']}\" />\n    </filter>\n  </entity>\n</fetch>"
                 },
                 "authentication": "@parameters('$authentication')"
               }
+            },
+            "Condition_2": {
+              "actions": {
+                "Add_a_new_row": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "92a52dc6-d99b-4177-9e2a-70184e0ac5e9"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "CreateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "ovs_organization_contacts",
+                      "item/ovs_contact_id@odata.bind": "\\contacts\\@{outputs('Get_a_row_by_ID')?['body/_ovs_contact_id_value']}",
+                      "item/ovs_organization_id@odata.bind": "\\accounts\\@{outputs('Get_a_row_by_ID')?['body/_ovs_account_id_value']}"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "List_rows": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "equals": [
+                  "@length(outputs('List_rows')?['body/value'])",
+                  0
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "01d599ad-f68e-44a1-a075-e11e6bdb0c59"
+              },
+              "type": "If"
             }
           },
           "runAfter": {
