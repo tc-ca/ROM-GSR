@@ -47,27 +47,6 @@ var AccountCRS_site = (function (window, document) {
         }
     }
 
-    //function setFormUsage(formContext) {
-
-    //    // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
-    //    //formType = glHelper.GetFormType(formContext);
-
-    //    //var formName = formContext.ui.formSelector.getCurrentItem().getLabel();
-    //    var parentaccountid = glHelper.GetLookupAttrId(formContext, "parentaccountid");
-    //    //var langId = Xrm.Utility.getGlobalContext().userSettings.languageId;
-
-    //    if (parentaccountid != null) {
-
-    //        glHelper.SetValue(formContext, "customertypecode", 948010001);
-
-    //    }
-    //    else {
-
-    //        glHelper.SetValue(formContext, "customertypecode", 948010000);
-    //    }
-
-    //}
-
 
     //********************private methods end***************
 
@@ -118,20 +97,6 @@ var AccountCRS_site = (function (window, document) {
         },
 
 
-        //relationShip_OnChange: function (executionContext) {
-
-        //    var formContext = executionContext.getFormContext();
-
-        //    //Load up resources for English/French labels
-        //    var langId = Xrm.Utility.getGlobalContext().userSettings.languageId;
-        //    var rType = glHelper.GetValue(formContext, "customertypecode");
-
-        //    if (langId == 1033)
-        //        glHelper.SwitchFormByName(formContext, formMapping_EN[rType.toString()]);
-        //    else if (langId == 1036)
-        //        glHelper.SwitchFormByName(formContext, formMapping_FR[rType.toString()]);
-
-        //},
 
         relationShip_OnChange: function (executionContext) {
 

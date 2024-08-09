@@ -666,7 +666,7 @@
         if (options != undefined && options.length > 0) {
 
             for (var i = 0; i < options.length; i++) {
-                //any or both death and injuries selected
+
                 if (options[i].value.toString() == valueOfOthersOptionAsString) {
                     visible = true;
                     required = "required";
@@ -678,6 +678,26 @@
         if (!visible) other.setValue(null);
         formContext.getControl(otherTxtControlName).setVisible(visible);
     }
+
+    function openOtherFromChoice(formContext, choiceControlName, valueOfOthersOptionAsString, otherTxtControlName) {
+
+        var visible = false;
+        var required = "none";
+        var other = formContext.getAttribute(otherTxtControlName);
+        var option = formContext.getAttribute(choiceControlName).getSelectedOption();
+        //any selected
+        if (option != undefined) {
+
+            if (option.value.toString() == valueOfOthersOptionAsString) {
+                visible = true;
+                required = "required";
+            }
+        }
+        other.setRequiredLevel(required);
+        if (!visible) other.setValue(null);
+        formContext.getControl(otherTxtControlName).setVisible(visible);
+    }
+
 
 
     /****************************************************************************************
@@ -984,6 +1004,7 @@
         isInDateRange: isInDateRange,
         isInDateTimeRange: isInDateTimeRange,
         openOtherFromChoice_s: openOtherFromChoice_s,
+        openOtherFromChoice: openOtherFromChoice,
     };
 
     //********************public methods end***************

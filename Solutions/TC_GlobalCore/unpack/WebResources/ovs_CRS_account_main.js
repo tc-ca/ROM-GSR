@@ -294,22 +294,6 @@ var AccountCRS_org = (function (window, document) {
         },
 
 
-        //relationShip_OnChange: function (executionContext) {
-
-        //    var formContext = executionContext.getFormContext();
-
-        //    //Load up resources for English/French labels
-        //    var langId = Xrm.Utility.getGlobalContext().userSettings.languageId;
-        //    var rType = glHelper.GetValue(formContext, "customertypecode");
-
-        //    if (langId == 1033)
-        //        glHelper.SwitchFormByName(formContext, formMapping_EN[rType.toString()]);
-        //    else if (langId == 1036)
-        //        glHelper.SwitchFormByName(formContext, formMapping_FR[rType.toString()]);
-
-        //},
-
-
         relationShip_OnChange: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
