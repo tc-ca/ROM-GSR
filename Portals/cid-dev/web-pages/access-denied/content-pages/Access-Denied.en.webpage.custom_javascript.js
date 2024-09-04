@@ -120,6 +120,7 @@ if (urlParams.has('invitationCode')) {
 	if (invitation_code.length > 0) {
 		var submit = $(":button.btn.btn-primary.btn-line");
 		submit.trigger('click');
+		$(":button.btn.btn-primary.btn-line").prop('disabled', true);
 	}
 }
 //account already existing
@@ -222,6 +223,7 @@ if (page_header == sign_up_invitation) {
 		sessionStorage.setItem('invitation_code', invitation_code);
 		$('#InvitationCode')[0].value = invitation_code;
 		$('#submit-redeem-invitation').trigger('click');
+		$("#submit-redeem-invitation").prop("disabled",true);
 	}
 	var invalid_invitation = tdg.error_message.message("m000194");
 	if ($('.validation-summary-errors')[0]) {
