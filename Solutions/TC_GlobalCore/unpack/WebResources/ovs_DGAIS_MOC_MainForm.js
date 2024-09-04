@@ -74,7 +74,7 @@ var DGAIS_MOC_MainForm = (function (window, document) {
 
     function filterVehicleType(executionContext, formContext) {
 
-        Xrm.WebApi.online.retrieveRecord("ovs_incident", incidentGuid, "?$select=ovs_mode_cd").then(
+        Xrm.WebApi.online.retrieveRecord("ovs_incident_report", incidentGuid, "?$select=ovs_mode_cd").then(
             function success(result) {
                 if (result != null) {
                     var ovs_mode_cd = result["ovs_mode_cd"];
@@ -84,7 +84,7 @@ var DGAIS_MOC_MainForm = (function (window, document) {
                     else {
 
                         glHelper.filterOptionSet(formContext, "ovs_vehicle_type_cd", mode[0], true);
-                        Xrm.Navigation.openErrorDialog({ message: "Parent Incident is missing the Mode.\n Vehicle Type and Configuration are not accessible!" });
+                        Xrm.Navigation.openErrorDialog({ message: "Parent Incident Report is missing the Mode.\n Vehicle Type and Configuration are not accessible!" });
                     }
 
                     //call vehicle type on change to update vehicle configuration
@@ -216,12 +216,12 @@ var DGAIS_MOC_MainForm = (function (window, document) {
 
             formType = glHelper.GetFormType(formContext);
             //header_
-            incidentGuid = glHelper.GetLookupAttrId(formContext, "ovs_incident_id");
+            incidentGuid = glHelper.GetLookupAttrId(formContext, "ovs_incident_report_id");
 
             if (incidentGuid == null)
             {
-                Xrm.Navigation.openErrorDialog({ message: "Incident must be populated" });
-                glHelper.SetFieldNotification(formContext, "header_ovs_incident_id", "Incident must be populated");
+                Xrm.Navigation.openErrorDialog({ message: "Incident Report must be populated" });
+                glHelper.SetFieldNotification(formContext, "header_ovs_incident_report_id", "Incident Report must be populated");
                 return;
             } else incidentGuid = incidentGuid.replace('{', '').replace('}', '');
             //store original list of options

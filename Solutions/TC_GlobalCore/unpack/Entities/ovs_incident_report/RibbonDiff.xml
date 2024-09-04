@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RibbonDiffXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <CustomActions>
+    <CustomAction Id="ovs.ovs_incident_report.Button.Form.CustomAction" Location="Mscrm.Form.ovs_incident_report.MainTab.Save.Controls._children" Sequence="38">
+      <CommandUIDefinition>
+        <Button Alt="$LocLabels:ovs.ovs_incident_report.Button.Form.Alt" Command="ovs.ovs_incident_report.Command.Form.StartCalculation" Id="ovs.ovs_incident_report.Button.Form" LabelText="$LocLabels:ovs.ovs_incident_report.Button.Form.LabelText" Sequence="38" TemplateAlias="o1" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <CustomAction Id="ovs.ovs_incident_report.Button.SubGrid.CustomAction" Location="Mscrm.SubGrid.ovs_incident_report.MainTab.Management.Controls._children" Sequence="45">
+      <CommandUIDefinition>
+        <Button Alt="$LocLabels:ovs.ovs_incident_report.Button.SubGrid.Alt" Command="ovs.ovs_incident_report.Command.SubGrid.StartCalculation" Id="ovs.ovs_incident_report.Button.SubGrid" LabelText="$LocLabels:ovs.ovs_incident_report.Button.SubGrid.LabelText" Sequence="45" TemplateAlias="o1" />
+      </CommandUIDefinition>
+    </CustomAction>
+  </CustomActions>
+  <Templates>
+    <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
+  </Templates>
+  <CommandDefinitions>
+    <CommandDefinition Id="ovs.ovs_incident_report.Command.Form.StartCalculation">
+      <EnableRules>
+        <EnableRule Id="ovs.ovs_incident_report.EnableRule.NotNewForm.CalcButton" />
+      </EnableRules>
+      <DisplayRules />
+      <Actions>
+        <JavaScriptFunction FunctionName="irRibbon.incidentReportForm" Library="$webresource:ovs_incidentReport_ribbon.js">
+          <CrmParameter Value="FirstPrimaryItemId" />
+          <CrmParameter Value="UserLcid" />
+          <CrmParameter Value="PrimaryControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="ovs.ovs_incident_report.Command.SubGrid.StartCalculation">
+      <EnableRules>
+        <EnableRule Id="ovs.ovs_incident_report.EnableRule.NotNewForm.CalcButton" />
+        <EnableRule Id="ovs.ovs_incident_report.EnableRule.SingleSelection.CalcButton" />
+      </EnableRules>
+      <DisplayRules />
+      <Actions>
+        <JavaScriptFunction FunctionName="irRibbon.incidentFormGrid" Library="$webresource:ovs_incidentReport_ribbon.js">
+          <CrmParameter Value="FirstSelectedItemId" />
+          <CrmParameter Value="FirstPrimaryItemId" />
+          <CrmParameter Value="UserLcid" />
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="PrimaryControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+  </CommandDefinitions>
+  <RuleDefinitions>
+    <TabDisplayRules />
+    <DisplayRules />
+    <EnableRules>
+      <EnableRule Id="ovs.ovs_incident_report.EnableRule.NotNewForm.CalcButton">
+        <FormStateRule State="Existing" />
+      </EnableRule>
+      <EnableRule Id="ovs.ovs_incident_report.EnableRule.SingleSelection.CalcButton">
+        <SelectionCountRule AppliesTo="SelectedEntity" Minimum="1" Maximum="1" />
+      </EnableRule>
+    </EnableRules>
+  </RuleDefinitions>
+  <LocLabels>
+    <LocLabel Id="ovs.ovs_incident_report.Button.Form.Alt">
+      <Titles>
+        <Title description="Starts incident calculation based on the incident report, which becames a primary repport" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.ovs_incident_report.Button.Form.LabelText">
+      <Titles>
+        <Title description="Calculate, Set Primary" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.ovs_incident_report.Button.SubGrid.Alt">
+      <Titles>
+        <Title description="Starts incident calculation based on the incident report, which becames a primary repport" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.ovs_incident_report.Button.SubGrid.LabelText">
+      <Titles>
+        <Title description="Calculate, Set Primary" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+  </LocLabels>
+</RibbonDiffXml>
