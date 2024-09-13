@@ -135,7 +135,13 @@ $(document).ready(function () {
 	
 		if ($("#cid_createdbyregistrant").val() != parent_Id && (Date.now() - created_On) / 1000 / 60 / 60 / 24 < 1) {
 			$("#cid_same_as_company").attr("disabled", false);
-			$("#ovs_address_type").attr("disabled", false);
+			//form-control picklist 
+			var addressTypeValue =  $("#ovs_address_type :selected").text();
+    		$("#ovs_address_type").after('<div class="readonly form-control picklist" tabindex="0">'+addressTypeValue +' </div>')
+            //hid disbled drop down
+    		$("#ovs_address_type").css("display" , "none");
+
+
 			$("#EntityFormView :input").prop("disabled",  false);
 			  
 			  
