@@ -210,7 +210,7 @@
                 }
               },
               "runAfter": {
-                "Create_Invitation_Email": [
+                "check_if_account_exists_in_invitation": [
                   "Succeeded"
                 ]
               },
@@ -283,7 +283,7 @@
                 "operationMetadataId": "64b6066e-da80-44ad-9cf3-5ae39daaa23f"
               },
               "type": "Compose",
-              "inputs": "<p>Dear @{triggerOutputs()?['body/ovs_name_first_nm']} @{triggerOutputs()?['body/ovs_name_last_nm']},   </p>\n<p>As a CANUTEC Registration System (CRS) user, we wish to inform you that Transport Canada has created a new registration system.</p>\n<p>We have migrated your account to the new CRS and invite you to log in to the new portal,  <a href=\"@{variables('PortalURL')}/en/invitation/accept?icode=@{triggerOutputs()?['body/ovs_invitationid']}\">TDG Online </a>. Once logged in to the portal, you will be deemed a primary contact and be able to access TDG Services, your organizations, sites, other contacts, and active CRS registrations.</p>\n<p>To ensure comprehensive migration of all your Safety Data Sheets (SDS), we kindly request that you upload all SDS documents into our new system. This process will help us confirm the completeness of our database and ensure we have the most current SDS available.</p>\n<p>Please note that to gain access to the portal, you will be required to log in with either a sign-in partner and your banking credentials or with GCKey credentials.</p>\n<p>Sincerely,</p>\n<p>The TDG Online Team</p>\n<p>*****************************************************************************************************************************************************</p>\n<p>Chèr(e) ​@{triggerOutputs()?['body/ovs_name_first_nm']} @{triggerOutputs()?['body/ovs_name_last_nm']},   </p>\n<p>En tant qu'utilisateur du système d'inscription CANUTEC (SIC), nous souhaitons vous informer que Transports Canada a créé un nouveau système d'inscription.</p>\n<p>Nous avons migré votre compte vers le nouveau SIC et vous invitons à vous connecter au nouveau portail  <a href=\"@{variables('PortalURL')}/fr/invitation/accept?icode=@{triggerOutputs()?['body/ovs_invitationid']}\">TMD En ligne</a>. Une fois connecté au portail, vous serez considéré comme étant un contact primaire et pourrez accéder aux services du TMD, à vos organisations, sites, autres contacts, ainsi qu'aux inscriptions SIC actives.</p>\n<p>Pour garantir la migration complète de toutes vos fiches de données de sécurité (FDS), nous vous prions de bien vouloir télécharger toutes vos FDS dans notre nouveau système. Cette démarche nous permettra de vérifier l'exhaustivité de notre base de données et de nous assurer que nous disposons des FDS les plus récentes.</p>\n<p>Veuillez noter que pour accéder au portail, vous devrez vous connecter soit avec un partenaire de connexion et vos identifiants bancaires, soit avec vos identifiants GCClé.</p>\n<p>Bien à vous,</p>\n<p>L'équipe du TMD En ligne</p>"
+              "inputs": "<p>Dear @{triggerOutputs()?['body/ovs_name_first_nm']} @{triggerOutputs()?['body/ovs_name_last_nm']},   </p>\n<p>As a CANUTEC Registration System (CRS) user, we wish to inform you that Transport Canada has created a new registration system.</p>\n<p>You are invited to the TDG Online portal. Please select the link below to access your account.<br><a href=\"@{variables('PortalURL')}/en/invitation/accept?icode=@{triggerOutputs()?['body/ovs_invitationid']}\">TDG Online</a><br> Once logged in to the portal, you will be deemed a primary contact and be able to access TDG Services, your organizations, sites, other contacts, and active CRS registrations.</p>\n<p>To ensure comprehensive migration of all your Safety Data Sheets (SDS), we kindly request that you upload all SDS documents into our new system. This process will help us confirm the completeness of our database and ensure we have the most current SDS available.</p>\n<p>Please note that to gain access to the portal, you will be required to log in with either a sign-in partner and your banking credentials or with GCKey credentials.</p>\n<p>Sincerely,</p>\n<p>The TDG Online Team</p>\n<p>*****************************************************************************************************************************************************</p>\n<p>Chèr(e) ​@{triggerOutputs()?['body/ovs_name_first_nm']} @{triggerOutputs()?['body/ovs_name_last_nm']},   </p>\n<p>En tant qu'utilisateur du système d'inscription CANUTEC (SIC), nous souhaitons vous informer que Transports Canada a créé un nouveau système d'inscription.</p>\n<p>Veuillez sélectionner le lien ci-bas afin d'accéder à votre compte.<br><a href=\"@{variables('PortalURL')}/fr/invitation/accepter?icode=@{triggerOutputs()?['body/ovs_invitationid']}\">TMD En ligne</a><br>\nUne fois connecté au portail, vous serez considéré comme étant un contact primaire et pourrez accéder aux services du TMD, à vos organisations, sites, autres contacts, ainsi qu'aux inscriptions SIC actives.</p>\n<p>Pour garantir la migration complète de toutes vos fiches de données de sécurité (FDS), nous vous prions de bien vouloir télécharger toutes vos FDS dans notre nouveau système. Cette démarche nous permettra de vérifier l'exhaustivité de notre base de données et de nous assurer que nous disposons des FDS les plus récentes.</p>\n<p>Veuillez noter que pour accéder au portail, vous devrez vous connecter soit avec un partenaire de connexion et vos identifiants bancaires, soit avec vos identifiants GCClé.</p>\n<p>Bien à vous,</p>\n<p>L'équipe du TMD En ligne</p>"
             },
             "Update_a_row": {
               "runAfter": {
@@ -383,6 +383,47 @@
               },
               "metadata": {
                 "operationMetadataId": "01d599ad-f68e-44a1-a075-e11e6bdb0c59"
+              },
+              "type": "If"
+            },
+            "check_if_account_exists_in_invitation": {
+              "actions": {
+                "Update_set_regarding_on_the_account": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "17d9b5d7-6599-4002-8695-0827047b43b0"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "emails",
+                      "recordId": "@outputs('Create_Invitation_Email')?['body/activityid']",
+                      "item/regardingobjectid_account_email@odata.bind": "\\accounts\\@{outputs('Get_a_row_by_ID')?['body/_ovs_account_id_value']}"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Create_Invitation_Email": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "not": {
+                  "equals": [
+                    "@outputs('Get_a_row_by_ID')?['body/_ovs_account_id_value']",
+                    "@null"
+                  ]
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "11d7165a-53aa-4b0b-bfae-8f96a70a2b2c"
               },
               "type": "If"
             }
