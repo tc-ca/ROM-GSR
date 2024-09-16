@@ -135,6 +135,7 @@ $(document).ready(function () {
 	
 		if ($("#cid_createdbyregistrant").val() != parent_Id && (Date.now() - created_On) / 1000 / 60 / 60 / 24 < 1) {
 			$("#cid_same_as_company").attr("disabled", false);
+			debugger;
 			//form-control picklist 
 			var addressTypeValue =  $("#ovs_address_type :selected").text();
     		$("#ovs_address_type").after('<div class="readonly form-control picklist" tabindex="0">'+addressTypeValue +' </div>')
@@ -391,8 +392,7 @@ if (window.jQuery) {
 function cid_input_read_only(sectionName) {
 	//Disable Address Fileds
 	$("#cid_same_as_company").attr("disabled", true);
-	$("#ovs_address_type").attr("disabled", true);
-	$(".section[data-name='" + sectionName + "']").find(':input').prop("readonly", "readonly");
+
 }
 
 function disable_All_Address_fields()
@@ -408,7 +408,17 @@ function disable_All_Address_fields()
     		$("#ovs_address1_province").after('<div class="readonly form-control picklist" tabindex="0">'+provincevalue +' </div>')
             //hid disbled drop down
     		$("#ovs_address1_province").css("display" , "none");
-}
+
+			$("#ovs_address_type").attr("disabled", false);
+
+			debugger;
+			//form-control picklist 
+			var addressTypeValue =  $("#ovs_address_type :selected").text();
+			$("#ovs_address_type").after('<div class="readonly form-control picklist" tabindex="0">'+addressTypeValue +' </div>')
+			//hid disbled drop down
+			$("#ovs_address_type").css("display" , "none");
+			$(".section[data-name='" + sectionName + "']").find(':input').prop("readonly", "readonly");
+		}
 
 function page_setup() {
 	var selected_language = '{{website.selected_language.code}}';

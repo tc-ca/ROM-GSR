@@ -167,6 +167,8 @@ $(document).ready(function () {
 				data = tdg.webapi.SelectedColumnlist("accounts", "name", "statecode eq 0 and cid_issiteattested ne true and (cid_siteclaim eq 100000000 or cid_siteclaim eq 100000001 or cid_siteclaim eq 100000003 or cid_siteclaim eq null) and _parentaccountid_value eq " + companyId);
 				
 				//ExecuteQuery("Validation_CompanyNotAttestedSites", filter);
+				debugger;
+
 
 				if (data != null && data.length > 0) {
 					errorMessage = "m000012"
