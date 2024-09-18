@@ -397,8 +397,10 @@ function cid_input_read_only(sectionName) {
 
 function disable_All_Address_fields()
 {
-	        $("#EntityFormView :input").prop("disabled", true);
-			
+	       debugger;
+
+	        $("#EntityFormView :input:text").prop("disabled", true);
+			debugger;
 			var f = document.getElementById("WebResource_address_complete");
 			var c = f.contentWindow;
 			c.document.getElementById("address1_line1").disabled = true ;
@@ -408,8 +410,6 @@ function disable_All_Address_fields()
     		$("#ovs_address1_province").after('<div class="readonly form-control picklist" tabindex="0">'+provincevalue +' </div>')
             //hid disbled drop down
     		$("#ovs_address1_province").css("display" , "none");
-
-			$("#ovs_address_type").attr("disabled", false);
 
 			debugger;
 			//form-control picklist 
