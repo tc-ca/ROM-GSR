@@ -7,50 +7,50 @@ $(document).ready(function () {
 	debugger;
 	page_setup();
 	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
-	 tdg.c.control_hide("adx_modifiedbyusername");
-	 tdg.c.control_hide("ovs_duplicatesiteflag");
-	 tdg.c.control_hide("cid_portalrecordcreationdetails");
-	 tdg.c.control_hide("cid_cidflag");
+	tdg.c.control_hide("adx_modifiedbyusername");
+	tdg.c.control_hide("ovs_duplicatesiteflag");
+	tdg.c.control_hide("cid_portalrecordcreationdetails");
+	tdg.c.control_hide("cid_cidflag");
 
-	
-    sessionStorage.setItem("Address1Onload", $("#address1_line1").val());
-	console.log( "address 1 on load " + $("#address1_line1").val());
-     $("#address1_line1").change(function(e) {
-		 sessionStorage.setItem("AddressDataChanged", true);
-	 });
-	     $("#address1_line2").change(function(e) {
-		 sessionStorage.setItem("AddressDataChanged", true);
-	 });
-	     $("#address1_line3").change(function(e) {
-		 sessionStorage.setItem("AddressDataChanged", true);
-	 });
-	     $("#address1_postalcode").change(function(e) {
-		 sessionStorage.setItem("AddressDataChanged", true);
-	 });
-	     $("#address1_latitude").change(function(e) {
-		 sessionStorage.setItem("AddressDataChanged", true);
-	 });
-	  $("#address1_longitude").change(function(e) {
-		 sessionStorage.setItem("AddressDataChanged", true);
-	 });
-	     $("#ovs_lld_quarter").change(function(e) {
-		 sessionStorage.setItem("AddressDataChanged", true);
-	 });
-	     $("#ovs_lld_section").change(function(e) {
-		 sessionStorage.setItem("AddressDataChanged", true);
-	 });
-	     $("#ovs_lld_township").change(function(e) {
-		 sessionStorage.setItem("AddressDataChanged", true);
-	 });
-	     $("#ovs_lld_township").change(function(e) {
-		 sessionStorage.setItem("AddressDataChanged", true);
-	 });
-	      $("#ovs_lld_range").change(function(e) {
-		 sessionStorage.setItem("AddressDataChanged", true);
-	 });
-	     $("#ovs_lld_meridian").change(function(e) {
-		 sessionStorage.setItem("AddressDataChanged", true);
-	 });
+
+	sessionStorage.setItem("Address1Onload", $("#address1_line1").val());
+	console.log("address 1 on load " + $("#address1_line1").val());
+	$("#address1_line1").change(function (e) {
+		sessionStorage.setItem("AddressDataChanged", true);
+	});
+	$("#address1_line2").change(function (e) {
+		sessionStorage.setItem("AddressDataChanged", true);
+	});
+	$("#address1_line3").change(function (e) {
+		sessionStorage.setItem("AddressDataChanged", true);
+	});
+	$("#address1_postalcode").change(function (e) {
+		sessionStorage.setItem("AddressDataChanged", true);
+	});
+	$("#address1_latitude").change(function (e) {
+		sessionStorage.setItem("AddressDataChanged", true);
+	});
+	$("#address1_longitude").change(function (e) {
+		sessionStorage.setItem("AddressDataChanged", true);
+	});
+	$("#ovs_lld_quarter").change(function (e) {
+		sessionStorage.setItem("AddressDataChanged", true);
+	});
+	$("#ovs_lld_section").change(function (e) {
+		sessionStorage.setItem("AddressDataChanged", true);
+	});
+	$("#ovs_lld_township").change(function (e) {
+		sessionStorage.setItem("AddressDataChanged", true);
+	});
+	$("#ovs_lld_township").change(function (e) {
+		sessionStorage.setItem("AddressDataChanged", true);
+	});
+	$("#ovs_lld_range").change(function (e) {
+		sessionStorage.setItem("AddressDataChanged", true);
+	});
+	$("#ovs_lld_meridian").change(function (e) {
+		sessionStorage.setItem("AddressDataChanged", true);
+	});
 
 
 
@@ -71,35 +71,31 @@ $(document).ready(function () {
 		$("#ovs_address1_province").attr("disabled", false);
 	});
 
-        var urlParams = new URLSearchParams(window.location.search);
-		if (urlParams.has('id')) 
-		{
-					var siteid = urlParams.get('id');
-				if (siteid != "") 
-				{
-				     var operationDataset = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_mocregistrationid",
-						"statuscode eq 1 and  ovs_operationtype eq 918640038  and _ovs_siteid_value eq "  + siteid);
-						console.log ("province : "  + $("#address1_stateorprovince").val());
-						if ( $("#address1_stateorprovince").val() == "AB")
-						{
-							 operationDataset = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_mocregistrationid",
-						"statuscode eq 1 and ( ovs_operationtype eq 918640038 or ovs_operationtype eq 918640042 ) and _ovs_siteid_value eq "  + siteid);
+	var urlParams = new URLSearchParams(window.location.search);
+	if (urlParams.has('id')) {
+		var siteid = urlParams.get('id');
+		if (siteid != "") {
+			var operationDataset = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_mocregistrationid",
+				"statuscode eq 1 and  ovs_operationtype eq 918640038  and _ovs_siteid_value eq " + siteid);
+			console.log("province : " + $("#address1_stateorprovince").val());
+			if ($("#address1_stateorprovince").val() == "AB") {
+				operationDataset = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_mocregistrationid",
+					"statuscode eq 1 and ( ovs_operationtype eq 918640038 or ovs_operationtype eq 918640042 ) and _ovs_siteid_value eq " + siteid);
 
-						}
-						
-						//var operationid = operationDataset[0].ovs_mocregistrationid ;
-					
-						if (operationDataset.length == 0)
-						{
-							var data = {
-								"ovs_SiteId@odata.bind": "/accounts(" + siteid + ")",
-								"ovs_operationtype": 918640038
-							};
-							tdg.webapi.create("ovs_mocregistrations", data);
+			}
 
-						}
-				}
+			//var operationid = operationDataset[0].ovs_mocregistrationid ;
+
+			if (operationDataset.length == 0) {
+				var data = {
+					"ovs_SiteId@odata.bind": "/accounts(" + siteid + ")",
+					"ovs_operationtype": 918640038
+				};
+				tdg.webapi.create("ovs_mocregistrations", data);
+
+			}
 		}
+	}
 
 	var inYear = sessionStorage.getItem('frominyearsites');
 	var annualCompliance = sessionStorage.getItem('fromannualcompliance');
@@ -129,31 +125,25 @@ $(document).ready(function () {
 
 		//Control address edit
 		var parent_Id = '{{ user.parentcustomerid.id }}';
-		
+
 
 		var created_On = new Date($("#createdon").val()).getTime();
-	
+
 		if ($("#cid_createdbyregistrant").val() != parent_Id && (Date.now() - created_On) / 1000 / 60 / 60 / 24 < 1) {
 			$("#cid_same_as_company").attr("disabled", false);
 			debugger;
-			//form-control picklist 
-			var addressTypeValue =  $("#ovs_address_type :selected").text();
-    		$("#ovs_address_type").after('<div class="readonly form-control picklist" tabindex="0">'+addressTypeValue +' </div>')
-            //hid disbled drop down
-    		$("#ovs_address_type").css("display" , "none");
+
+			$("#EntityFormView :input").prop("disabled", false);
 
 
-			$("#EntityFormView :input").prop("disabled",  false);
-			  
-			  
 
 
-			
+
 		}
 		else {
 
-			setTimeout(disable_All_Address_fields , 2000);
-		
+			setTimeout(disable_All_Address_fields, 2000);
+
 
 		}
 	}
@@ -191,7 +181,7 @@ $(document).ready(function () {
 	$("#name").val(cid_legalname);
 	// hide controls
 	tdg.c.control_hide("name");
-	
+
 	tdg.c.control_hide("cid_siteclaim");
 	$("#cid_sitename").attr("autocomplete", "new-password");
 	$("#telephone1").attr("autocomplete", "new-password");
@@ -256,128 +246,127 @@ if (window.jQuery) {
 			$('#ErrorMessageDiv').css('display', 'none');
 			var addressType = $("#ovs_address_type").val();
 			var account_id = '{{user.parentcustomerid.Id}}';
-		
-		
 
-			console.log ("Line 1" + sessionStorage.getItem("Line1"))
-			console.log ( "address afeter change " + $("#address1_line1").val());
-			var address1AfterLoad=sessionStorage.getItem("Line1");
+
+
+			console.log("Line 1" + sessionStorage.getItem("Line1"))
+			console.log("address afeter change " + $("#address1_line1").val());
+			var address1AfterLoad = sessionStorage.getItem("Line1");
 			var address1Onload = sessionStorage.getItem("Address1Onload");
 
-			
-		//if ($("#ovs_duplicatesiteflag :selected").val() != 918640000 && $("#ovs_duplicatesiteflag :selected").val() != 918640001 )
-	
-		if (sessionStorage.getItem("AddressDataChanged") == "true" || (address1AfterLoad != address1Onload && address1AfterLoad != null ) )
-		{
-			switch (addressType) {
-			case "1":
-				// legal land description
-				debugger;
 
-				var lldProvince = $("#ovs_lld_province").val();
-				var quarter = $("#ovs_lld_quarter").val();
-				var section = $("#ovs_lld_section").val();
-				var township = $("#ovs_lld_township").val();
-				var range = $("#ovs_lld_range").val();
-				var meridian = $("#ovs_lld_meridian").val();
+			//if ($("#ovs_duplicatesiteflag :selected").val() != 918640000 && $("#ovs_duplicatesiteflag :selected").val() != 918640001 )
 
-				if ((lldProvince == '') || (quarter == '') || (section == '') || (township == '') || (range == '') || (meridian == '')) {
-					return true;
-				}
-				var parameters = {};
-				parameters.Parent_Id = account_id; // Edm.String
-				if (lldProvince != (null || "")) { parameters.Lld_Province = parseInt(lldProvince); }   // Edm.Int32                    
-				if (quarter != (null || "")) { parameters.Lld_Quarter = parseInt(quarter); }   // Edm.Int32    
-				if (section != (null || "")) { parameters.Lld_Section = parseInt(section); }   // Edm.Int32                    
-				if (township != (null || "")) { parameters.Lld_Township = parseInt(township); }   // Edm.Int32                    
-				if (range != (null || "")) { parameters.Lld_Range = parseInt(range); }   // Edm.Int32                    
-				if (meridian != (null || "")) { parameters.Lld_Meridian = parseInt(meridian); }   // Edm.Int32 
-				parameters.AddressType = 1; // Edm.Int32
+			if (sessionStorage.getItem("AddressDataChanged") == "true" || (address1AfterLoad != address1Onload && address1AfterLoad != null)) {
+				switch (addressType) {
+					case "1":
+						// legal land description
+						debugger;
 
-				var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
-				var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
+						var lldProvince = $("#ovs_lld_province").val();
+						var quarter = $("#ovs_lld_quarter").val();
+						var section = $("#ovs_lld_section").val();
+						var township = $("#ovs_lld_township").val();
+						var range = $("#ovs_lld_range").val();
+						var meridian = $("#ovs_lld_meridian").val();
 
-				if (EnvironmentSettingResult.length > 0) {
-					var FlowURL = EnvironmentSettingResult[0]["qm_value"];
-					return CheckDuplicate(FlowURL, parameters);
-				} //end check if flow url found
-				else {
-					return true;
-				}
+						if ((lldProvince == '') || (quarter == '') || (section == '') || (township == '') || (range == '') || (meridian == '')) {
+							return true;
+						}
+						var parameters = {};
+						parameters.Parent_Id = account_id; // Edm.String
+						if (lldProvince != (null || "")) { parameters.Lld_Province = parseInt(lldProvince); }   // Edm.Int32                    
+						if (quarter != (null || "")) { parameters.Lld_Quarter = parseInt(quarter); }   // Edm.Int32    
+						if (section != (null || "")) { parameters.Lld_Section = parseInt(section); }   // Edm.Int32                    
+						if (township != (null || "")) { parameters.Lld_Township = parseInt(township); }   // Edm.Int32                    
+						if (range != (null || "")) { parameters.Lld_Range = parseInt(range); }   // Edm.Int32                    
+						if (meridian != (null || "")) { parameters.Lld_Meridian = parseInt(meridian); }   // Edm.Int32 
+						parameters.AddressType = 1; // Edm.Int32
 
-				break;
+						var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
+						var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
 
-			case "2":
-				// lat/long
-				debugger;
-				if (($("#address1_latitude").val() == '') || ($("#address1_longitude").val() == '')) {
-					return true;
-				}
-				var latitude = $("#address1_latitude").val();
-				var longitude = $("#address1_longitude").val();
-				$('#ErrorMessageDiv').css('display', 'none');
-				var checkresult = CheckLatLongDecimal();
-				if (checkresult == false) {
-					return false;
-				}
-				else {
+						if (EnvironmentSettingResult.length > 0) {
+							var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+							return CheckDuplicate(FlowURL, parameters);
+						} //end check if flow url found
+						else {
+							return true;
+						}
 
-					var parameters = {};
-					parameters.Parent_Id = account_id; // Edm.String
-					parameters.AddressType = 2; // Edm.Int32
-					if (latitude != (null || "")) { parameters.Address1_Latitude = parseFloat(latitude).toFixed(4); }   // Edm.Float                    
-					if (longitude != (null || "")) { parameters.Address1_Longitude = parseFloat(longitude).toFixed(4); }   // Edm.Float    
+						break;
 
-					var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
-					var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
+					case "2":
+						// lat/long
+						debugger;
+						if (($("#address1_latitude").val() == '') || ($("#address1_longitude").val() == '')) {
+							return true;
+						}
+						var latitude = $("#address1_latitude").val();
+						var longitude = $("#address1_longitude").val();
+						$('#ErrorMessageDiv').css('display', 'none');
+						var checkresult = CheckLatLongDecimal();
+						if (checkresult == false) {
+							return false;
+						}
+						else {
 
-					if (EnvironmentSettingResult.length > 0) {
-						var FlowURL = EnvironmentSettingResult[0]["qm_value"];
-						return CheckDuplicate(FlowURL, parameters);
-					}
-					else { return true; }
-				}
+							var parameters = {};
+							parameters.Parent_Id = account_id; // Edm.String
+							parameters.AddressType = 2; // Edm.Int32
+							if (latitude != (null || "")) { parameters.Address1_Latitude = parseFloat(latitude).toFixed(4); }   // Edm.Float                    
+							if (longitude != (null || "")) { parameters.Address1_Longitude = parseFloat(longitude).toFixed(4); }   // Edm.Float    
 
-				break;
+							var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
+							var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
 
-			default:
-				//postal
-				debugger;
+							if (EnvironmentSettingResult.length > 0) {
+								var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+								return CheckDuplicate(FlowURL, parameters);
+							}
+							else { return true; }
+						}
 
+						break;
+
+					default:
+						//postal
+						debugger;
 
 
-				var address1_line1 = $("#address1_line1").val();
-				var address1_line2 = $("#address1_line2").val();
-				var address1_line3 = $("#address1_line3").val();
-				var address1_postalcode = $("#address1_postalcode").val();
 
-				if ((address1_line1 == '') || ($("#address1_city").val() == '') || (address1_postalcode == '') || ($("#ovs_address1_province").val() == '')) {
-					return true;
-				}
+						var address1_line1 = $("#address1_line1").val();
+						var address1_line2 = $("#address1_line2").val();
+						var address1_line3 = $("#address1_line3").val();
+						var address1_postalcode = $("#address1_postalcode").val();
 
-				var parameters = {};
-				parameters.Parent_Id = account_id; // Edm.String
-				parameters.AddressType = 0; // Edm.Int32
-				parameters.Address1_Postal = address1_postalcode; // Edm.String
-				parameters.Address1_Line1 = address1_line1; // Edm.String
-				parameters.Address1_Line2 = address1_line2; // Edm.String
-				parameters.Address1_Line3 = address1_line3; // Edm.String
+						if ((address1_line1 == '') || ($("#address1_city").val() == '') || (address1_postalcode == '') || ($("#ovs_address1_province").val() == '')) {
+							return true;
+						}
 
-				var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
-				var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
+						var parameters = {};
+						parameters.Parent_Id = account_id; // Edm.String
+						parameters.AddressType = 0; // Edm.Int32
+						parameters.Address1_Postal = address1_postalcode; // Edm.String
+						parameters.Address1_Line1 = address1_line1; // Edm.String
+						parameters.Address1_Line2 = address1_line2; // Edm.String
+						parameters.Address1_Line3 = address1_line3; // Edm.String
 
-				if (EnvironmentSettingResult.length > 0) {
-					var FlowURL = EnvironmentSettingResult[0]["qm_value"];
-					
-					return CheckDuplicate(FlowURL, parameters);
-					
-				}
-				else
-					return true;
+						var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
+						var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
 
-				break;
-					}//end witch
-		}
+						if (EnvironmentSettingResult.length > 0) {
+							var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+
+							return CheckDuplicate(FlowURL, parameters);
+
+						}
+						else
+							return true;
+
+						break;
+				}//end witch
+			}
 
 			if (addressType == 2) {
 				var checkresult = CheckLatLongDecimal();
@@ -395,30 +384,38 @@ function cid_input_read_only(sectionName) {
 
 }
 
-function disable_All_Address_fields()
-{
-	       debugger;
+function disable_All_Address_fields() {
+	debugger;
 
-	        $("#EntityFormView :input:text").prop("disabled", true);
-			debugger;
-			var f = document.getElementById("WebResource_address_complete");
-			var c = f.contentWindow;
-			c.document.getElementById("address1_line1").disabled = true ;
-			
-			//form-control picklist 
-			 var provincevalue =  $("#ovs_address1_province :selected").text();
-    		$("#ovs_address1_province").after('<div class="readonly form-control picklist" tabindex="0">'+provincevalue +' </div>')
-            //hid disbled drop down
-    		$("#ovs_address1_province").css("display" , "none");
+	$("#EntityFormView :input:text").prop("disabled", true);
+	debugger;
+	var f = document.getElementById("WebResource_address_complete");
+	var c = f.contentWindow;
+	c.document.getElementById("address1_line1").disabled = true;
 
-			debugger;
-			//form-control picklist 
-			var addressTypeValue =  $("#ovs_address_type :selected").text();
-			$("#ovs_address_type").after('<div class="readonly form-control picklist" tabindex="0">'+addressTypeValue +' </div>')
-			//hid disbled drop down
-			$("#ovs_address_type").css("display" , "none");
-			$(".section[data-name='" + sectionName + "']").find(':input').prop("readonly", "readonly");
-		}
+	//form-control picklist 
+	var provincevalue = $("#ovs_address1_province :selected").text();
+	$("#ovs_address1_province").after('<div class="readonly form-control picklist" tabindex="0">' + provincevalue + ' </div>')
+	//hid disbled drop down
+	$("#ovs_address1_province").css("display", "none");
+
+	debugger;
+	//disable "same as company
+	//form-control picklist 
+	var addressTypeValue = $("#cid_same_as_company :selected").text();
+	$("#cid_same_as_company").after('<div class="readonly form-control picklist" tabindex="0">' + addressTypeValue + ' </div>')
+	//hid disbled drop down
+	$("#cid_same_as_company").css("display", "none");
+	$(".section[data-name='" + sectionName + "']").find(':input').prop("readonly", "readonly");
+
+
+	//form-control picklist 
+	var addressTypeValue = $("#ovs_address_type :selected").text();
+	$("#ovs_address_type").after('<div class="readonly form-control picklist" tabindex="0">' + addressTypeValue + ' </div>')
+	//hid disbled drop down
+	$("#ovs_address_type").css("display", "none");
+	$(".section[data-name='" + sectionName + "']").find(':input').prop("readonly", "readonly");
+}
 
 function page_setup() {
 	var selected_language = '{{website.selected_language.code}}';
@@ -462,72 +459,72 @@ function Show_PluginError_TextLanguag(Field) {
 }
 
 function CheckLatLongDecimal() {
- 	return true;
+	return true;
 }
 
 var CheckDuplicate = function (_flowURl, _parameters) {
-    var req = new XMLHttpRequest();
-    req.open("POST", _flowURl, true);
-    req.setRequestHeader('Content-Type', 'application/json');
-    req.onreadystatechange = function () {
-        if (this.readyState === 4) {
-            req.onreadystatechange = null;
-            if (this.status === 200) {
-                debugger;
+	var req = new XMLHttpRequest();
+	req.open("POST", _flowURl, true);
+	req.setRequestHeader('Content-Type', 'application/json');
+	req.onreadystatechange = function () {
+		if (this.readyState === 4) {
+			req.onreadystatechange = null;
+			if (this.status === 200) {
+				debugger;
 
-                var result = JSON.parse(this.response);
-                var duplicatefound = result["DuplicateFound"]; // Edm.Boolean
-                var currentSiteOwner = result["CurrentSiteOwnerCompany"]; //string
-                var currentSiteId = result["CurrentSiteId"]; //string currentSiteId
-                var currentSiteOwnerId = result["CurrentSiteOwnerCompanyId"]; //string CurrentSiteOwnerCompanyId
-                var InactiveSiteFound = result["InactiveSiteFound"];
-                if (InactiveSiteFound == true) {
-                    var ReActivatedSiteGUID = result["InactiveSiteGUID"];
-                    var currentURL = window.location.href;
-                    console.log("split :");
-                    console.log(currentURL.replace("https://", "").split("/")[0]);
-                    window.location.href = "~/SiteRegistrationWizard?id=" + ReActivatedSiteGUID + "&newsite=true"
-                    //currentURL.replace("https://", "").split("/")[0] +"/SiteRegistrationWizard?" +ReActivatedSiteGUID;
-                    return false;
+				var result = JSON.parse(this.response);
+				var duplicatefound = result["DuplicateFound"]; // Edm.Boolean
+				var currentSiteOwner = result["CurrentSiteOwnerCompany"]; //string
+				var currentSiteId = result["CurrentSiteId"]; //string currentSiteId
+				var currentSiteOwnerId = result["CurrentSiteOwnerCompanyId"]; //string CurrentSiteOwnerCompanyId
+				var InactiveSiteFound = result["InactiveSiteFound"];
+				if (InactiveSiteFound == true) {
+					var ReActivatedSiteGUID = result["InactiveSiteGUID"];
+					var currentURL = window.location.href;
+					console.log("split :");
+					console.log(currentURL.replace("https://", "").split("/")[0]);
+					window.location.href = "~/SiteRegistrationWizard?id=" + ReActivatedSiteGUID + "&newsite=true"
+					//currentURL.replace("https://", "").split("/")[0] +"/SiteRegistrationWizard?" +ReActivatedSiteGUID;
+					return false;
 
-                }
+				}
 
-                else if (duplicatefound) {
-                    var message = tdg.error_message.message("m000203");
-                    //"There is already an active Organization at this address. Is your Organization sharing this Site with another Organization or is this the result of a sale, merger or acquisition? If you entered the wrong address, select cancel and re-enter the correct address.";
-                    //tdg.error_message.message("m000131");
-                    //tdg.c.dialog_YN
-                    tdg.c.DialogWith_DropDown(message, (ans) => {
-                        var accName = "";
-                        var accId = "";
-                        var contact_id = '{{user.id}}';
-                        if (ans) {
-                           
-                           // entityFormClientValidate = true;
-						   webFormClientValidate = true;
-                            //originalValidationFunction = true;
-                            $("#NextButton").click();
-                            return true;
-                        }
-                        else {
-                            return false;
-                        }
-                    });
-                }
-                else {
-					sessionStorage.setItem("AddressDataChanged",false);
-                    entityFormClientValidate = true;
-                    originalValidationFunction = true;
+				else if (duplicatefound) {
+					var message = tdg.error_message.message("m000203");
+					//"There is already an active Organization at this address. Is your Organization sharing this Site with another Organization or is this the result of a sale, merger or acquisition? If you entered the wrong address, select cancel and re-enter the correct address.";
+					//tdg.error_message.message("m000131");
+					//tdg.c.dialog_YN
+					tdg.c.DialogWith_DropDown(message, (ans) => {
+						var accName = "";
+						var accId = "";
+						var contact_id = '{{user.id}}';
+						if (ans) {
+
+							// entityFormClientValidate = true;
+							webFormClientValidate = true;
+							//originalValidationFunction = true;
+							$("#NextButton").click();
+							return true;
+						}
+						else {
+							return false;
+						}
+					});
+				}
+				else {
+					sessionStorage.setItem("AddressDataChanged", false);
+					entityFormClientValidate = true;
+					originalValidationFunction = true;
 					webFormClientValidate = true;
-                    $("#NextButton").click();
-                    return true;
-                }
-            }
-            else
-                debugger;
-            return false;
+					$("#NextButton").click();
+					return true;
+				}
+			}
+			else
+				debugger;
+			return false;
 
-        } //end ready status
-    }; //end on ready function
-    req.send(JSON.stringify(_parameters));
+		} //end ready status
+	}; //end on ready function
+	req.send(JSON.stringify(_parameters));
 }
