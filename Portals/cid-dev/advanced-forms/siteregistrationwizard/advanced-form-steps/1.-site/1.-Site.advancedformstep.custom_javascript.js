@@ -406,7 +406,7 @@ function disable_All_Address_fields() {
 	$("#cid_same_as_company").after('<div class="readonly form-control picklist" tabindex="0">' + addressTypeValue + ' </div>')
 	//hid disbled drop down
 	$("#cid_same_as_company").css("display", "none");
-	$(".section[data-name='" + sectionName + "']").find(':input').prop("readonly", "readonly");
+	
 
 
 	//form-control picklist 
@@ -414,7 +414,7 @@ function disable_All_Address_fields() {
 	$("#ovs_address_type").after('<div class="readonly form-control picklist" tabindex="0">' + addressTypeValue + ' </div>')
 	//hid disbled drop down
 	$("#ovs_address_type").css("display", "none");
-	$(".section[data-name='" + sectionName + "']").find(':input').prop("readonly", "readonly");
+	
 }
 
 function page_setup() {
