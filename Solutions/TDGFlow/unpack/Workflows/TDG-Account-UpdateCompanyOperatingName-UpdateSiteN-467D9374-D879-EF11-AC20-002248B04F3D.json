@@ -1,0 +1,212 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "impersonation": {},
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "e74e2550-516e-41a3-8b72-6e37d9556ec5"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "account",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "name, ovs_namefr",
+              "subscriptionRequest/filterexpression": "customertypecode eq 948010000",
+              "subscriptionRequest/runas": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Organization_Operation_Name_EN": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "ac8d795b-3831-4ef4-b535-f75fb37a38f6"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "OrganizationOperationNameEN",
+                "type": "string",
+                "value": "@triggerOutputs()?['body/name']"
+              }
+            ]
+          }
+        },
+        "Organization_Operation_Name_FR": {
+          "runAfter": {
+            "Organization_Operation_Name_EN": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82640e61-e704-420b-b96d-3f04825e51d4"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "OrganizationOperationNameFR",
+                "type": "string",
+                "value": "@triggerOutputs()?['body/ovs_namefr']"
+              }
+            ]
+          }
+        },
+        "Check_if_NameEN_or_NameFR_were_updated": {
+          "actions": {
+            "Get_child_sites": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "61f7f32a-240d-47f4-ad0d-d986165d48cf"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "$select": "accountid",
+                  "$filter": "_parentaccountid_value eq '@{triggerOutputs()?['body/accountid']}' and customertypecode eq 948010001"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Check_if_there_are_child_sites": {
+              "actions": {
+                "Apply_to_each": {
+                  "foreach": "@outputs('Get_child_sites')?['body/value']",
+                  "actions": {
+                    "Perform_an_unbound_action": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "8440da7f-7ec0-4566-a5de-89957e788bf9"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "PerformUnboundAction",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "actionName": "ovs_UpdateSiteNameFromCompanyNameUpdate",
+                          "item/siteId": "@items('Apply_to_each')?['accountid']",
+                          "item/OrganizationOperationNameEN": "@variables('OrganizationOperationNameEN')",
+                          "item/OrganizationOperationNameFR": "@variables('OrganizationOperationNameFR')"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  },
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "49213626-8fe3-4791-9f04-41cdc25ca66c"
+                  },
+                  "type": "Foreach",
+                  "runtimeConfiguration": {
+                    "concurrency": {
+                      "repetitions": 35
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Get_child_sites": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@empty(outputs('Get_child_sites')?['body'])",
+                      "@false"
+                    ]
+                  },
+                  {
+                    "greater": [
+                      "@length(outputs('Get_child_sites')?['body/value'])",
+                      0
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "99e26bc4-f850-48d0-b8e0-ff3085f2a6d6"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "Organization_Operation_Name_FR": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "or": [
+              {
+                "not": {
+                  "equals": [
+                    "@empty(variables('OrganizationOperationNameEN'))",
+                    "@true"
+                  ]
+                }
+              },
+              {
+                "not": {
+                  "equals": [
+                    "@empty(variables('OrganizationOperationNameFR'))",
+                    "@true"
+                  ]
+                }
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "79499963-95c1-48f5-9a73-38d620646c23"
+          },
+          "type": "If"
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
