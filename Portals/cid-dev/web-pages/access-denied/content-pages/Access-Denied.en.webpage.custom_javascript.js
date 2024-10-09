@@ -1,7 +1,4 @@
-//
 // Web Page-Access Denied
-// 
-
 $(document).ready(function () {
 	debugger;
 
@@ -118,9 +115,10 @@ if (urlParams.has('invitationCode')) {
 	var invitation_code = urlParams.get('invitationCode');
 	var code = sessionStorage.getItem('invitation_code');
 	if (invitation_code.length > 0) {
+		$(":button.btn.btn-primary.btn-line").prop('disabled', true);
 		var submit = $(":button.btn.btn-primary.btn-line");
 		submit.trigger('click');
-		$(":button.btn.btn-primary.btn-line").prop('disabled', true);
+		//$(":button.btn.btn-primary.btn-line").prop('disabled', true);
 	}
 }
 //account already existing
@@ -221,9 +219,10 @@ if (page_header == sign_up_invitation) {
 	var invitation_code = urlParams.get('invitation_code');
 	if (invitation_code != null) {
 		sessionStorage.setItem('invitation_code', invitation_code);
+		$("#submit-redeem-invitation").prop("disabled", true);
 		$('#InvitationCode')[0].value = invitation_code;
 		$('#submit-redeem-invitation').trigger('click');
-		$("#submit-redeem-invitation").prop("disabled",true);
+		//$("#submit-redeem-invitation").prop("disabled", true);
 	}
 	var invalid_invitation = tdg.error_message.message("m000194");
 	if ($('.validation-summary-errors')[0]) {
