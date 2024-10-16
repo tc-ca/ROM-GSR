@@ -631,7 +631,7 @@
             }
           },
           "runAfter": {
-            "Delay": [
+            "Set_variable_varHyperLink_": [
               "Succeeded"
             ]
           },
@@ -722,56 +722,6 @@
             ]
           }
         },
-        "check_if_company_is_not_claim": {
-          "actions": {
-            "Update_parent_company_status_and_invitation_flag": {
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "15614dfa-41d1-4688-9503-2ad7d02a91b2"
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "connectionName": "shared_commondataserviceforapps",
-                  "operationId": "UpdateRecord",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                },
-                "parameters": {
-                  "entityName": "accounts",
-                  "recordId": "@triggerBody()?['parentcustomerid']",
-                  "item/ovs_invitation_only": true,
-                  "item/cid_cidcompanystatus": 100000004
-                },
-                "authentication": "@parameters('$authentication')"
-              }
-            }
-          },
-          "runAfter": {
-            "Update_a_row": [
-              "Succeeded"
-            ]
-          },
-          "expression": {
-            "or": [
-              {
-                "equals": [
-                  "@outputs('Get_a_row_by_ID_Accounts')?['body/cid_cidcompanystatus']",
-                  "@null"
-                ]
-              },
-              {
-                "equals": [
-                  "@outputs('Get_a_row_by_ID_Accounts')?['body/cid_cidcompanystatus']",
-                  -1
-                ]
-              }
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "ce7c0b25-1f4e-4715-8611-0e11e8757571"
-          },
-          "type": "If"
-        },
         "langid": {
           "runAfter": {
             "parentcustomerid": [
@@ -783,54 +733,6 @@
           },
           "type": "Compose",
           "inputs": "@triggerBody()?['langid']"
-        },
-        "Update_company_status_to_invitation_sent": {
-          "runAfter": {
-            "Terminate": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "15614dfa-41d1-4688-9503-2ad7d02a91b2"
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "host": {
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "UpdateRecord",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
-            "parameters": {
-              "entityName": "accounts",
-              "recordId": "@triggerBody()?['parentcustomerid']",
-              "item/cid_cidcompanystatus": 100000004
-            },
-            "authentication": "@parameters('$authentication')"
-          }
-        },
-        "Update_a_row": {
-          "runAfter": {
-            "Update_company_status_to_invitation_sent": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "08344e5b-a71f-43ca-8fb7-95c5aa176028"
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "host": {
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "UpdateRecord",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
-            "parameters": {
-              "entityName": "adx_invitations",
-              "recordId": "@outputs('InvitationId')",
-              "item/statuscode": 756150000
-            },
-            "authentication": "@parameters('$authentication')"
-          }
         },
         "InvitationId": {
           "runAfter": {
@@ -844,23 +746,9 @@
           "type": "Compose",
           "inputs": "@outputs('Create_New_Invitation_Record')?['body/@odata.id']"
         },
-        "Terminate": {
-          "runAfter": {
-            "Condition": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "8c778401-2c68-4755-9a5e-8a5a89cea291"
-          },
-          "type": "Terminate",
-          "inputs": {
-            "runStatus": "Succeeded"
-          }
-        },
         "Create_New_Invitation_Record": {
           "runAfter": {
-            "check_if_no_primary_contact": [
+            "Condition": [
               "Succeeded"
             ]
           },
@@ -1020,7 +908,7 @@
             }
           },
           "runAfter": {
-            "Check_Language_and_send_email_": [
+            "Delay": [
               "Succeeded"
             ]
           },
@@ -1037,7 +925,7 @@
         },
         "Delay": {
           "runAfter": {
-            "Set_variable_varHyperLink_": [
+            "check_if_no_primary_contact": [
               "Succeeded"
             ]
           },
